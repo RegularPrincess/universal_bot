@@ -6,6 +6,7 @@ import requests
 import utils.db_utils as db
 import model as m
 import config as cfg
+from utils.chat_libs import whatsapplib as wapp
 
 
 class id_wrapper:
@@ -134,5 +135,7 @@ def isint(s):
 # print(try_whatsapp('79501751514', 'Да'))
 
 
-def first_send():
-    return None
+def first_send(num, msg):
+    wapp.send_message(num, msg)
+    q = db.get_all_quests()
+    wapp.send_message_keyboard(num, q[0].quest, ['Раз', 'два', 'три'])

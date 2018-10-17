@@ -71,7 +71,7 @@ def admin_message_processing(uid, text):
 
     elif 'whatsapp' in text :
         num = text.split(' ')[1]
-        if num[0] == '7' and len(num) == 10:
+        if num[0] == '7' and len(num) == 11:
             msg = db.get_first_msg()
             mt.first_send(num, msg)
         else:
@@ -209,7 +209,8 @@ def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
 
 
-# message_processing('259056624', 'Admin', cnst.VK)
+message_processing('259056624', 'admin', cnst.VK)
+message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
 
 
 def start_conwersation(number):

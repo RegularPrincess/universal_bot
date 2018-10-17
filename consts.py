@@ -200,41 +200,7 @@ KEYBOARD_CANCEL_AND_MSG_EDIT = {
                 "label": BTN_FIRST_MSG_EDIT
             },
             "color": "default"
-        }],
-        [{
-            "action": {
-                "type": "text",
-                "payload": "{\"button\": \"1\"}",
-                "label": BTN_MAIL_MSG_EDIT
-            },
-            "color": "default"
-        },
-            {
-                "action": {
-                    "type": "text",
-                    "payload": "{\"button\": \"1\"}",
-                    "label": BTN_NUMBER_MSG_EDIT
-                },
-                "color": "default"
-            }
-        ],
-[{
-            "action": {
-                "type": "text",
-                "payload": "{\"button\": \"1\"}",
-                "label": BTN_FIRST_BTN_EDIT
-            },
-            "color": "default"
-        },
-            {
-                "action": {
-                    "type": "text",
-                    "payload": "{\"button\": \"1\"}",
-                    "label": BTN_COLOR_BTN_EDIT
-                },
-                "color": "default"
-            }
-        ]
+        }]
     ]
 }
 
