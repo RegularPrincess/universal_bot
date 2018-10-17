@@ -48,9 +48,10 @@ def add_any(obj):
     try:
         db.session.add(obj)
         db.session.commit()
+    except sqlalchemy.exc.InvalidRequestError as e:
+        print(e)
     except BaseException as e:
         print(e)
-        pass
 
 
 def is_admin(uid):
@@ -70,6 +71,9 @@ def_admin = m.Admin('Юрий', '259056624')
 add_any(def_admin)
 f_msg = m.Msgs('Приветственное сообщение')
 add_any(f_msg)
+#
+# q = m.QuestMsg('Ведите, день и месяц вашего рождения!')
+# add_any(q)
 
 # admin = m.Admin('None', 'admin id 228')
 # add_any(admin)
