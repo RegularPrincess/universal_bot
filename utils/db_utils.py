@@ -64,6 +64,12 @@ def is_new_user(uid):
     d = session.query(m.EnrollInfo).filter_by(uid=uid).first()
     return d is None
 
+
+def_admin = m.Admin('Юрий', '259056624')
+add_any(def_admin)
+f_msg = m.Msgs('Приветственное сообщение')
+add_any(f_msg)
+
 # admin = m.Admin('None', 'admin id 228')
 # add_any(admin)
 # print(is_admin('admin id 2299'))
