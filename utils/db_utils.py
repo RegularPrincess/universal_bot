@@ -49,8 +49,10 @@ def add_any(obj):
         db.session.add(obj)
         db.session.commit()
     except sqlalchemy.exc.InvalidRequestError as e:
+        db.session.rollback()
         print(e)
     except BaseException as e:
+        db.session.rollback()
         print(e)
 
 
