@@ -48,7 +48,8 @@ def add_any(obj):
     try:
         db.session.add(obj)
         db.session.commit()
-    except sqlalchemy.exc.IntegrityError as e:
+    except BaseException as e:
+        print(e)
         pass
 
 
