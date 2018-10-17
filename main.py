@@ -4,11 +4,10 @@
 from flask import Flask
 from flask import json
 from flask import request
-import logging as log
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+import os
 
 import config
-import service as s
 
 
 token = config.token
@@ -21,7 +20,6 @@ db_name = config.db_name
 bot_name = config.bot_name
 vk_api_url = config.vk_api_url
 
-import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
@@ -29,13 +27,31 @@ SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from app import views, models
+import service as s
+import consts as cnst
+
+@app.route(rule='/whatsappnewmsg', methods=['POST'])
+def whatsapp_new_msg():
+    data = json.loads(request.data)
+    for m in data['messages']:
+        text = m['body']
+        uid = m['chatId']
+        print(text)
+        print(uid)
+        answer = s.message_processing(uid, text, cnst.WHATSAPP)
+        return answer
 
 
 @app.route(rule='/', methods=['GET'])
 def debug():
+    # answer = s.message_processing('1111', 'admin', cnst.VK)
+    # answer = s.message_processing('1111', 'Администраторы', cnst.VK)
+    s.start_conwersation('79991577222')
+    s.message_processing('79991577222', 'ответ 1', cnst.WHATSAPP)
     return "hello world"
 
 
@@ -53,34 +69,17 @@ def processing():
     if data['type'] == 'confirmation':
         print("Группа привязана!")
         return confirmation_token
-    elif data['type'] == 'group_join':
-        uid = data['object']['user_id']
-        answer = s.group_join(uid)
-        return answer
     elif data['type'] == 'message_new':
         uid = data['object']['from_id']
         text = data['object']['text']
-        answer = s.message_processing(uid, text)
+        answer = s.message_processing(uid, text, cnst.VK)
         return answer
-    elif data['type'] == 'group_leave':
-        uid = data['object']['user_id']
-        answer = s.group_leave(uid)
-        return answer
-    elif data['type'] == 'message_allow':
-        uid = data['object']['user_id']
-        answer = s.message_allow(uid)
-        return answer
-    elif data['type'] == 'message_deny':
-        uid = data['object']['user_id']
-        answer = s.message_deny(uid)
-        return answer
-    return 'ok'
 
 
 def main():
     print ("Старт")
     port = int(config.port)
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='127.0.0.1', port=port, debug=False)
 
 if __name__ == '__main__':
     main()

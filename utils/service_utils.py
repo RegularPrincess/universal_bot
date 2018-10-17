@@ -1,37 +1,16 @@
 import json
-import os
 import re
 
 import datetime
-
-import copy
 import requests
-
-import utils.vklib as vk
 import utils.db_utils as db
 import model as m
-import consts as cnst
 import config as cfg
-
-
-def get_user_keyboard():
-    k = cnst.KEYBOARD_USER
-    k["buttons"][0][0]["action"]["label"] = db.get_first_btn()
-    k["buttons"][0][0]["color"] = db.get_color_btn()
-    return k
-
-
-def get_user_enroll_btn():
-    k = cnst.enroll_btn
-    k[0]["action"]["label"] = db.get_first_btn()
-    k[0]["color"] = db.get_color_btn()
-    return k
-
 
 
 class id_wrapper:
     def __init__(self):
-        self.questions = db.get_quest_msgs()
+        self.questions = db.get_all_quests()
 
     def get_db_id(self, vid):
         return self.questions[vid - 1].id
@@ -44,7 +23,7 @@ class id_wrapper:
             i += 1
 
     def update(self):
-        self.questions = db.get_quest_msgs()
+        self.questions = db.get_all_quests()
 
 
 ID_WRAPPER = id_wrapper()
@@ -56,14 +35,14 @@ def del_uid_from_dict(uid, dict_):
 
 
 def send_message_admins(info):
-    admins = db.get_list_bot_admins()
+    admins = db.get_all_admins()
     note = 'Примечания : {}'.format("\n".join(info.answers))
-    vk.send_message_much(admins, cnst.NOTIFY_ADMIN.format(info.uid, info.name, info.email, info.number, note))
+    # vk.send_message_much(admins, cnst.NOTIFY_ADMIN.format(info.uid, info.name, info.email, info.number, note))
 
 
 def send_message_admins_after_restart():
-    admins = db.get_list_bot_admins()
-    vk.send_message_much_keyboard(admins, cnst.MSG_SERVER_RESTARTED, get_user_keyboard())
+    admins = db.get_all_admins()
+    # vk.send_message_much_keyboard(admins, cnst.MSG_SERVER_RESTARTED, get_user_keyboard())
 
 
 def is_number_valid(number):
@@ -94,22 +73,6 @@ def parse_bcst(text):
         return None
 
 
-def get_keyboard_from_list(list, def_btn=get_user_enroll_btn()):
-    keyboard = copy.deepcopy(cnst.keyboard_pattern.copy())
-    c = 0
-    for i in list:
-        if c == 7:
-            break
-        one_btns = copy.deepcopy(cnst.one_button_pattern)
-        one_btns[0]['action']['label'] = i
-        j = {"button": 'K'}
-        one_btns[0]['action']['payload'] = json.dumps(j)
-        keyboard['buttons'].append(one_btns)
-        c += 1
-    keyboard['buttons'].append(def_btn)
-    return keyboard
-
-
 def send_data_to_uon(data, uid):
     today = datetime.datetime.today()
     t = today.time()
@@ -133,7 +96,7 @@ def send_data_to_uon(data, uid):
 
 
 def get_quest_msgs_as_str():
-    quests = db.get_quest_msgs()
+    quests = db.get_all_quests()
     str = ''
     if len(quests) == 0:
         str = '<Еще нет ни одного вопроса кроме вопросов о телефоне и email, которые есть всегда>'
@@ -147,7 +110,7 @@ def get_quest_msgs_as_str():
 
 def del_question(vid):
     db_id = ID_WRAPPER.get_db_id(vid)
-    db.delete_quest_msg(db_id)
+    db.delete_quest(db_id)
     ID_WRAPPER.update()
 
 
@@ -155,7 +118,8 @@ def add_quest_msg(quest, answs, vid=None):
     db_id = vid
     if vid is not None:
         db_id = ID_WRAPPER.get_db_id(vid)
-    db.add_quest_msg(quest, answs, db_id)
+    q = m.QuestMsg(quest, answs, db_id)
+    db.add_any(q)
     ID_WRAPPER.update()
 
 
@@ -166,29 +130,9 @@ def isint(s):
     except ValueError:
         return False
 
-
-def send_welcome_msg(uid, uname, keyboard):
-    if uname is None:
-        uname = vk.get_user_name(uid)
-    msg = db.get_first_msg()
-    vk.send_message_keyboard(uid, msg.format(uname), keyboard)
+# get_queue_whatsapp()
+# print(try_whatsapp('79501751514', 'Да'))
 
 
-def emailing_to_all_subs_keyboard(uid, text):
-    """
-    Разослать текст всем подписчикам, кому возможно группы
-    """
-    count = 0
-    arr = []
-    users = db.get_bot_followers()
-    for u in users:
-        if u.is_msging_allowed():
-            arr.append(u.uid)
-            count += 1
-        if len(arr) == 100:
-            vk.send_message_much_keyboard(arr, text, get_user_keyboard())
-            arr = []
-    vk.send_message_much_keyboard(arr, text, get_user_keyboard())
-    vk.send_message_keyboard(uid, cnst.MSG_BROADCAST_COMPLETED.format(count), cnst.KEYBOARD_ADMIN)
-    return count
-
+def first_send():
+    return None

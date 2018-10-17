@@ -24,6 +24,13 @@ __COLOR_BTN = "positive"
 __BTN_ENROLL = "Записаиться на занятие"
 
 
+WHATSAPP = 0
+VK = 1
+VIBER = 2
+TG = 3
+SMS = 4
+
+
 BTN_COLORS_MAP = {"Синий": "primary",
                   "Белый": "default",
                   "Красный": "negative ",
@@ -292,7 +299,7 @@ KEYBOARD_ADMIN = {
                 "action": {
                     "type": "text",
                     "payload": "{\"button\": \"2\"}",
-                    "label": BTN_SUBS
+                    "label": MSG_ADMIN_EXIT
                 },
                 "color": "default"
             }],
@@ -325,22 +332,6 @@ KEYBOARD_ADMIN = {
                     "type": "text",
                     "payload": "{\"button\": \"7\"}",
                     "label": BTN_BROADCAST_BY_TIME
-                },
-                "color": "default"
-            }],
-        [{
-            "action": {
-                "type": "text",
-                "payload": "{\"button\": \"4\"}",
-                "label": BTN_LEAVE_REASON
-            },
-            "color": "default"
-        },
-            {
-                "action": {
-                    "type": "text",
-                    "payload": "{\"button\": \"5\"}",
-                    "label": MSG_ADMIN_EXIT
                 },
                 "color": "default"
             }],
