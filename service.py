@@ -190,7 +190,7 @@ def message_processing(uid, text, source):
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):
-        if db.is_admin(uid) and source == cnst.VK:
+        if db.is_admin(str(uid)) and source == cnst.VK:
             IN_ADMIN_PANEL[uid] = ''
             mt.send_keyboard_vk_message(uid, cnst.MSG_ADMIN_PANEL, cnst.KEYBOARD_ADMIN)
         elif source != cnst.VK:
@@ -209,7 +209,7 @@ def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
 
 
-message_processing('259056624', 'Admin', cnst.VK)
+# message_processing('259056624', 'Admin', cnst.VK)
 
 
 def start_conwersation(number):
