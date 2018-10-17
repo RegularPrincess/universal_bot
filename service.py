@@ -193,8 +193,10 @@ def message_processing(uid, text, source):
         if db.is_admin(uid) and source == cnst.VK:
             IN_ADMIN_PANEL[uid] = ''
             mt.send_keyboard_vk_message(uid, cnst.MSG_ADMIN_PANEL, cnst.KEYBOARD_ADMIN)
-        elif source == cnst.VK:
+        elif source != cnst.VK:
             mt.send_message(uid, "Зайдите в меню администратора через ВК")
+        elif not db.is_admin(uid):
+            mt.send_message(uid, "Вы не админ")
     elif text.lower() == "clearme":
         pass
         # mt.send_message(uid, "clear", keyboard=cnst.EMPTY_KEYBOARD)
@@ -205,6 +207,9 @@ def message_processing(uid, text, source):
 
 def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
+
+
+message_processing('259056624', 'Admin', cnst.VK)
 
 
 def start_conwersation(number):
