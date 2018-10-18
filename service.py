@@ -112,7 +112,7 @@ def admin_message_processing(uid, text):
                             IN_ADMIN_PANEL[uid].quest is None and IN_ADMIN_PANEL[uid].id is None:
                 IN_ADMIN_PANEL[uid].id = int(qid_str)
                 text = ' '.join(text.split(' ')[1:])
-            if IN_ADMIN_PANEL[uid].quest is None:
+            if IN_ADMIN_PANEL[uid].quest == '':
                 IN_ADMIN_PANEL[uid].quest = text
                 mt.send_keyboard_vk_message(uid, cnst.MSG_ADDING_ANSWS_VAR, cnst.KEYBOARD_END_AND_CANCELE)
             elif text == cnst.BTN_END:
