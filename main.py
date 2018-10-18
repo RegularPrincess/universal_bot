@@ -9,7 +9,6 @@ import os
 
 import config
 
-
 token = config.token
 confirmation_token = config.confirmation_token
 secret_key = config.secret_key
@@ -25,7 +24,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -35,17 +33,21 @@ import service as s
 import consts as cnst
 
 
-@app.route(rule='/request.in', methods=['POST'])
+@app.route(rule='{}/request.in', methods=['POST'])
 def whatsapp_new_msg():
-    data = json.loads(request.data)
-    for m in data['messages']:
-        text = m['body']
-        index = m['chatId'].index('@')
-        uid = m['chatId'][:index]
-        print(text)
-        print(uid)
-        answer = s.message_processing(uid, text, cnst.WHATSAPP)
-        return answer
+    try:
+        data = json.loads(request.data)
+        for m in data['messages']:
+            text = m['body']
+            index = m['chatId'].index('@')
+            uid = m['chatId'][:index]
+            print(text)
+            print(uid)
+            answer = s.message_processing(uid, text, cnst.WHATSAPP)
+            return 'ok'
+    except BaseException as e:
+        print(e)
+        return 'ok'
 
 
 @app.route(rule='/', methods=['GET'])
@@ -68,21 +70,24 @@ def debug2():
 @app.route(rule='/{0}'.format(bot_name), methods=['POST'])
 def processing():
     print('Пришел пост запрос')
-    data = json.loads(request.data)
-
-    if 'secret' not in data.keys():
-        print('Not vk')
-        return 'Not VK.'
-    elif not data['secret'] == secret_key:
-        print(data['secret'] + "  token не подходит")
-        return 'Bad query.'
-    if data['type'] == 'confirmation':
-        print("Группа привязана!")
-        return confirmation_token
-    elif data['type'] == 'message_new':
-        uid = data['object']['from_id']
-        text = data['object']['text']
-        answer = s.message_processing(uid, text, cnst.VK)
+    try:
+        data = json.loads(request.data)
+        if 'secret' not in data.keys():
+            print('Not vk')
+            return 'Not VK.'
+        elif not data['secret'] == secret_key:
+            print(data['secret'] + "  token не подходит")
+            return 'Bad query.'
+        if data['type'] == 'confirmation':
+            print("Группа привязана!")
+            return confirmation_token
+        elif data['type'] == 'message_new':
+            uid = data['object']['from_id']
+            text = data['object']['text']
+            answer = s.message_processing(uid, text, cnst.VK)
+            return 'ok'
+    except BaseException as e:
+        print(e)
         return 'ok'
 
 
@@ -90,6 +95,7 @@ def main():
     print("Старт")
     port = int(config.port)
     app.run(host='0.0.0.0', port=port, debug=False)
+
 
 if __name__ == '__main__':
     main()
