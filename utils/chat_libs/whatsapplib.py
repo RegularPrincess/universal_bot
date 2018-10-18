@@ -16,7 +16,7 @@ def send_message(user_id, text):
         "body": text
     }
     print(payload)
-    url = ' https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
+    url = 'https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
     response = requests.post(url, data=payload)
     print(response)
     print(response.text)
@@ -35,7 +35,7 @@ def send_message_keyboard(user_id, text, keyboard):
         "body": text
     }
     print(payload)
-    url = ' https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
+    url = 'https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
     response = requests.post(url, data=payload)
     print(response)
     print(response.text)
@@ -48,7 +48,7 @@ def send_message_keyboard(user_id, text, keyboard):
 
 
 def get_queue_whatsapp():
-    url = ' https://eu21.chat-api.com/instance13769/showMessagesQueue?token=8xfrmb4v0c29qea2'
+    url = 'https://eu21.chat-api.com/instance13769/showMessagesQueue?token=8xfrmb4v0c29qea2'
     response = requests.get(url)
     print(response)
     print(response.text)
