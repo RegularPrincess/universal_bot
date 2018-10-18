@@ -128,6 +128,7 @@ def admin_message_processing(uid, text):
         mt.send_msg_all_whatsapp_subs(text)
         IN_ADMIN_PANEL.clear()
         IN_ADMIN_PANEL[uid] = ''
+        mt.send_keyboard_vk_message(uid, "Разослано", cnst.KEYBOARD_ADMIN)
 
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
@@ -184,7 +185,7 @@ def message_processing(uid, text, source):
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
-            if utils.isint(text):
+            if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
                 index = int(text)
                 text = READY_TO_ENROLL[uid].last_variants[index]
             else:
