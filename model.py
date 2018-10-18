@@ -23,7 +23,7 @@ class QuestMsg(db.Model):
     quest = db.Column(db.UnicodeText, index=True)
     answs = db.Column(db.UnicodeText)
 
-    def __init__(self, quest=None, answs=None, id=None):
+    def __init__(self, quest='', answs='', id=None):
         if id is not None: self.id = id
         self.quest = quest
         self.answs = answs
@@ -64,7 +64,7 @@ class EnrollInfo(db.Model):
     answers = db.Column(db.TEXT)
     msgr = db.Column(db.INTEGER)
 
-    def __init__(self, number, uid=None, id=None, answers=None, msgr=None):
+    def __init__(self, number, uid=None, id=None, answers='', msgr=None):
         self.id = id
         self.uid = uid
         self.number = number
