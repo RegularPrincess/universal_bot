@@ -27,7 +27,7 @@ def admin_message_processing(uid, text):
     elif text == cnst.BTN_BROADCAST:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST
         # mt.send_message(uid, cnst.MSG_USER_SHORT_INFO.format(all_count, msg_allowed_count))
-        # mt.send_message(uid, cnst.MSG_ACCEPT_BROADCAST, cnst.KEYBOARD_CANCEL)
+        mt.send_message(uid, cnst.MSG_ACCEPT_BROADCAST, cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS
