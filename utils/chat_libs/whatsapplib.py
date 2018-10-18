@@ -61,6 +61,7 @@ def get_keyboard_from_list(list_btns):
     i = 1
     for b in list_btns:
         k += str(i) + ' - ' + b + '\n'
+        i += 1
     return k
 #
 # def send_message_much(user_ids, text):

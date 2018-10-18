@@ -79,3 +79,4 @@ class EnrollObj:
     def __init__(self, enroll_info, quests):
         self.ei = enroll_info
         self.qsts = quests
+        self.last_variants = None

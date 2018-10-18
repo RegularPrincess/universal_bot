@@ -183,14 +183,22 @@ def message_processing(uid, text, source):
 
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
+        if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
+            if utils.isint(text):
+                index = int(text)
+                text = READY_TO_ENROLL[uid].last_variants[index]
+            else:
+                mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             READY_TO_ENROLL[uid].ei.answers += text + '; '
             q = READY_TO_ENROLL[uid].qsts.pop(0)
             msg = q.quest
             if q.answs is not None and len(q.answs) > 0:
                 answrs = q.answs.split('; ')
+                READY_TO_ENROLL[uid].last_variants = answrs
                 mt.send_message_keyboard(uid, msg, answrs, msgr=READY_TO_ENROLL[uid].ei.msgr)
             else:
+                READY_TO_ENROLL[uid].last_variants = None
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
         else:
             answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
@@ -200,6 +208,7 @@ def message_processing(uid, text, source):
             obj.time = datetime.strptime('10:00', '%H:%M').time()
             obj.repet_days = 365
             thread_manager.add_brcst_thread(obj)
+            db.add_any(READY_TO_ENROLL[uid].ei)
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):

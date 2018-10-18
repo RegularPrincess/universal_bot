@@ -41,9 +41,11 @@ def whatsapp_new_msg():
             text = m['body']
             index = m['chatId'].index('@')
             uid = m['chatId'][:index]
+            from_me = m['fromMe']
             print(text)
             print(uid)
-            answer = s.message_processing(uid, text, cnst.WHATSAPP)
+            if not from_me:
+                answer = s.message_processing(uid, text, cnst.WHATSAPP)
             return 'ok'
     except BaseException as e:
         print(e)
