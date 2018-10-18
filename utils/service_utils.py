@@ -134,8 +134,8 @@ def isint(s):
 # get_queue_whatsapp()
 # print(try_whatsapp('79501751514', 'Да'))
 
-
-def first_send(num, msg):
-    wapp.send_message(num, msg)
-    q = db.get_all_quests()
-    wapp.send_message_keyboard(num, q[0].quest, ['Раз', 'два', 'три'])
+#
+# def first_send(num, msg):
+#     wapp.send_message(num, msg)
+#     q = db.get_all_quests()
+#     wapp.send_message_keyboard(num, 'первый вопрос', 'раз; два; три'.split('; '))

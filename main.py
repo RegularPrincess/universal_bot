@@ -40,7 +40,8 @@ def whatsapp_new_msg():
     data = json.loads(request.data)
     for m in data['messages']:
         text = m['body']
-        uid = m['chatId']
+        index = m['chatId'].index('@')
+        uid = m['chatId'][:index]
         print(text)
         print(uid)
         answer = s.message_processing(uid, text, cnst.WHATSAPP)
@@ -51,9 +52,17 @@ def whatsapp_new_msg():
 def debug():
     # answer = s.message_processing('1111', 'admin', cnst.VK)
     # answer = s.message_processing('1111', 'Администраторы', cnst.VK)
-    s.start_conwersation('79991577222')
-    s.message_processing('79991577222', 'ответ 1', cnst.WHATSAPP)
+    # s.start_conwersation('79991577222')
+    # s.message_processing('79991577222', 'ответ 1', cnst.WHATSAPP)
+    answer = s.message_processing('259056624', 'admin', cnst.VK)
+    answer = s.message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
     return "hello world"
+
+
+@app.route(rule='/2', methods=['GET'])
+def debug2():
+    answer = s.message_processing('79991577222', '11', cnst.WHATSAPP)
+    return answer
 
 
 @app.route(rule='/{0}'.format(bot_name), methods=['POST'])
@@ -78,9 +87,9 @@ def processing():
 
 
 def main():
-    print ("Старт")
+    print("Старт")
     port = int(config.port)
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='127.0.0.1', port=port, debug=False)
 
 if __name__ == '__main__':
     main()

@@ -20,6 +20,7 @@ BTN_MAIL_MSG_EDIT = "Ред-ть запрос email"
 BTN_NUMBER_MSG_EDIT = "Ред-ть запрос номера"
 BTN_FIRST_BTN_EDIT = "Ред-ть текст кнопки"
 BTN_COLOR_BTN_EDIT = 'Ред-ть цвет кнопки'
+BTN_CONGRATULATION_EDIT = 'Редактировать поздравление'
 __COLOR_BTN = "positive"
 __BTN_ENROLL = "Записаиться на занятие"
 
@@ -200,7 +201,16 @@ KEYBOARD_CANCEL_AND_MSG_EDIT = {
                 "label": BTN_FIRST_MSG_EDIT
             },
             "color": "default"
-        }]
+        },
+            {
+                "action": {
+                    "type": "text",
+                    "payload": "{\"button\": \"1\"}",
+                    "label": BTN_CONGRATULATION_EDIT
+                },
+                "color": "default"
+            }
+        ]
     ]
 }
 

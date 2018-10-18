@@ -2,54 +2,55 @@ import time
 from multiprocessing import Process
 from threading import Thread
 
+from datetime import datetime, timedelta
+from utils import db_utils as db
 import consts as cnst
 import utils.chat_libs.vklib as vk
 import utils.chat_libs.whatsapplib as wapp
-import utils.service_utils as su
-import utils.service_utils as us
+import utils.service_utils as utils
 
 
-# class ThreadManager:
-#     def __init__(self):
-#         self.bcst_threads = []
-#
-#     def run_brdcst_shedule(self):
-#         bcst = db.get_bcsts_by_time()
-#         self.bcst_threads = []
-#         for b in bcst:
-#             self.bcst_threads.append(ThreadBrdcst(b))
-#         for bt in self.bcst_threads:
-#             bt.start()
-#
-#     def add_brcst_thread(self, bcst):
-#         db.add_bcst(bcst)
-#         self.run_brdcst_shedule()
-#
-#     def delete_brcst(self, id):
-#         db.delete_bcst(id)
-#         self.run_brdcst_shedule()
-#
-#
-# class ThreadBrdcst(Thread):
-#     def __init__(self, bcst):
-#         """Инициализация потока"""
-#         Thread.__init__(self)
-#         self.bcst = bcst
-#
-#     def run(self):
-#         day = self.bcst.start_date
-#         time_ = self.bcst.time
-#         plane = datetime.combine(day, time_)
-#         wait_time = 0
-#         while True:
-#             now = datetime.today()
-#             while plane < now:
-#                 plane += timedelta(days=self.bcst.repet_days)
-#             if plane >= now:
-#                 wait_time = (plane - now).total_seconds()
-#             time.sleep(wait_time)
-#             us.emailing_to_all_subs_keyboard(self.bcst.msg)
-#             time.sleep(61)
+class ThreadManager:
+    def __init__(self):
+        self.bcst_threads = []
+
+    def run_brdcst_shedule(self):
+        bcsts = db.get_all_bcsts()
+        self.bcst_threads = []
+        for b in bcsts:
+            self.bcst_threads.append(ThreadBrdcst(b))
+        for bt in self.bcst_threads:
+            bt.start()
+
+    def add_brcst_thread(self, bcst):
+        db.add_any(bcst)
+        self.run_brdcst_shedule()
+
+    def delete_brcst(self, id):
+        db.delete_brdcst(id)
+        self.run_brdcst_shedule()
+
+
+class ThreadBrdcst(Thread):
+    def __init__(self, bcst):
+        """Инициализация потока"""
+        Thread.__init__(self)
+        self.bcst = bcst
+
+    def run(self):
+        day = self.bcst.start_date
+        time_ = self.bcst.time
+        plane = datetime.combine(day, time_)
+        wait_time = 0
+        while True:
+            now = datetime.today()
+            while plane < now:
+                plane += timedelta(days=self.bcst.repet_days)
+            if plane >= now:
+                wait_time = (plane - now).total_seconds()
+            time.sleep(wait_time)
+            send_msg_all_whatsapp_subs(self.bcst.msg)
+            time.sleep(61)
 
 
 class _ThreadSendDataByTimeout(Thread):
@@ -67,8 +68,8 @@ class _ThreadSendDataByTimeout(Thread):
             print(self._time)
         if not self.is_stopped:
             self.info.answers.append('Пользователь не завершил процедуру.')
-            us.send_message_admins(self.info)
-            us.send_data_to_uon(self.info, self.uid)
+            utils.send_message_admins(self.info)
+            utils.send_data_to_uon(self.info, self.uid)
 
     def stop(self):
         self.is_stopped = True
@@ -103,6 +104,11 @@ def send_keyboard_vk_message(uid, msg, keyboard):
     p.start()
 
 
+def send_msg_all_whatsapp_subs(msg):
+    p = Process(target=_send_msg_all_whatsapp_subs, args=(msg,))
+    p.start()
+
+
 def send_msg_welcome(uid, out=cnst.WHATSAPP):
 
     if out == cnst.WHATSAPP:
@@ -117,10 +123,11 @@ def send_msg_welcome(uid, out=cnst.WHATSAPP):
 
 
 def send_msg_to_admins(info):
-    proc = Process(target=su.send_message_admins, args=(info,))
+    proc = Process(target=utils.send_message_admins, args=(info,))
     proc.start()
 
 
-def first_send(num, msg):
-    proc = Process(target=su.first_send, args=(num, msg))
-    proc.start()
+def _send_msg_all_whatsapp_subs(msg):
+    users = db.get_all_users()
+    for u in users:
+        wapp.send_message(u.number, msg)
