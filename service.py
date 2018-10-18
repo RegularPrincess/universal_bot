@@ -100,7 +100,7 @@ def admin_message_processing(uid, text):
 
     elif isinstance(IN_ADMIN_PANEL[uid], m.QuestMsg):
         try:
-            if IN_ADMIN_PANEL[uid].quest is not None:
+            if IN_ADMIN_PANEL[uid].quest != '':
                 int('not int')
             qid = int(text)
             utils.del_question(qid)

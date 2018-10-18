@@ -33,7 +33,7 @@ import service as s
 import consts as cnst
 
 
-@app.route(rule='{}/request.in'.format(bot_name), methods=['POST'])
+@app.route(rule='/{}/request.in'.format(bot_name), methods=['POST'])
 def whatsapp_new_msg():
     try:
         data = json.loads(request.data)
