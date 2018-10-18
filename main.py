@@ -83,13 +83,13 @@ def processing():
         uid = data['object']['from_id']
         text = data['object']['text']
         answer = s.message_processing(uid, text, cnst.VK)
-        return answer
+        return 'ok'
 
 
 def main():
     print("Старт")
     port = int(config.port)
-    app.run(host='127.0.0.1', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
 
 if __name__ == '__main__':
     main()
