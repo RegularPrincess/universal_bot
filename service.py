@@ -27,7 +27,7 @@ def admin_message_processing(uid, text):
     elif text == cnst.BTN_BROADCAST:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST
         # mt.send_message(uid, cnst.MSG_USER_SHORT_INFO.format(all_count, msg_allowed_count))
-        mt.send_message(uid, cnst.MSG_ACCEPT_BROADCAST, cnst.KEYBOARD_CANCEL)
+        mt.send_keyboard_vk_message(uid, cnst.MSG_ACCEPT_BROADCAST, cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS
@@ -207,8 +207,11 @@ def message_processing(uid, text, source):
             obj.start_date = datetime.strptime(dmy, '%d.%m.%Y').date()
             obj.time = datetime.strptime('10:00', '%H:%M').time()
             obj.repet_days = 365
+            mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
             thread_manager.add_brcst_thread(obj)
             db.add_any(READY_TO_ENROLL[uid].ei)
+            READY_TO_ENROLL[uid].last_variants = None
+            utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):

@@ -6,7 +6,10 @@ import requests
 import utils.db_utils as db
 import model as m
 import config as cfg
+import consts as cnst
 from utils.chat_libs import whatsapplib as wapp
+from utils.chat_libs import vklib as vk
+
 
 
 class id_wrapper:
@@ -38,7 +41,7 @@ def del_uid_from_dict(uid, dict_):
 def send_message_admins(info):
     admins = db.get_all_admins()
     note = 'Примечания : {}'.format("\n".join(info.answers))
-    # vk.send_message_much(admins, cnst.NOTIFY_ADMIN.format(info.uid, info.name, info.email, info.number, note))
+    vk.send_message_much(admins, cnst.NOTIFY_ADMIN.format(info.uid, note))
 
 
 def send_message_admins_after_restart():
