@@ -96,6 +96,13 @@ def update_admin(name, uid):
     session.commit()
 
 
+def update_quest(quest_msg, id):
+    u = session.query(m.QuestMsg).filter_by(id=id).first()
+    u.quest = quest_msg.quest
+    u.answs = quest_msg.answs
+    session.commit()
+
+
 # update_admin('new name', '480542758')
 
 

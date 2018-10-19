@@ -122,9 +122,12 @@ def add_quest_msg(quest, answs, vid=None):
     db_id = vid
     if vid is not None:
         db_id = ID_WRAPPER.get_db_id(vid)
-    q = m.QuestMsg(quest, answs, db_id)
-    db.add_any(q)
-    ID_WRAPPER.update()
+        q = m.QuestMsg(quest, answs, db_id)
+        db.update_quest(q, db_id)
+    else:
+        q = m.QuestMsg(quest, answs, db_id)
+        db.add_any(q)
+        ID_WRAPPER.update()
 
 
 def isint(s):
