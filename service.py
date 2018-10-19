@@ -166,7 +166,7 @@ def admin_message_processing(uid, text):
         try:
             id = int(text)
             thread_manager.delete_brcst(id)
-            mt.send_message(uid, "Запланированная рассылка удалена", cnst.KEYBOARD_ADMIN)
+            mt.send_keyboard_vk_message(uid, "Запланированная рассылка удалена", cnst.KEYBOARD_ADMIN)
             IN_ADMIN_PANEL[uid] = ''
         except ValueError:
             msg = cnst.MSG_VALUE_ERROR
@@ -202,15 +202,24 @@ def message_processing(uid, text, source):
                 READY_TO_ENROLL[uid].last_variants = None
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
         else:
-            answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
-            dmy = answs[1] + '.' + answs[0] + '.' + str(datetime.today().year)
-            obj = m.BcstByTime()
-            obj.start_date = datetime.strptime(dmy, '%d.%m.%Y').date()
-            obj.time = datetime.strptime('10:00', '%H:%M').time()
-            obj.repet_days = 365
+            try:
+                answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
+                if datetime.today().month > int(answs[1]) and \
+                    datetime.today().day > int(answs[0]):
+                    y = str(datetime.today().year + 1)
+                else:
+                    y = str(datetime.today().year + 1)
+                dmy = answs[1] + '.' + answs[0] + '.' + y
+                obj = m.BcstByTime()
+                obj.start_date = datetime.strptime(dmy, '%d.%m.%Y').date()
+                obj.time = datetime.strptime('10:00', '%H:%M').time()
+                obj.repet_days = 365
+                obj.msg = db.get_congrat_msg()
+                thread_manager.add_brcst_thread(obj)
+            except BaseException as e:
+                print(e)
             mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-            thread_manager.add_brcst_thread(obj)
-            db.add_any(READY_TO_ENROLL[uid].ei)
+            db.update_user(uid, READY_TO_ENROLL[uid].ei)
             READY_TO_ENROLL[uid].last_variants = None
             utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
@@ -240,12 +249,15 @@ def not_ready_to_enroll(uid):
 
 
 def start_conwersation(number):
+    new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     db.add_any(user)
     msg = db.get_first_msg()
     mt.send_message(number, msg, cnst.WHATSAPP)
     time.sleep(1)
     quests = db.get_all_quests()
+    if not new:
+        quests = quests[2:]
     if len(quests) > 0:
         q = quests.pop(0)
         mt.send_message(number, q.quest, cnst.WHATSAPP)

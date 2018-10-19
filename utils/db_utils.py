@@ -83,6 +83,23 @@ def add_any(obj):
         print(e)
 
 
+def update_user(user, uid):
+    u = session.query(m.EnrollInfo).filter_by(uid=uid).first()
+    u.answers = user.answers
+    u.uid = user.uid
+    session.commit()
+
+
+def update_admin(name, uid):
+    u = session.query(m.Admin).filter_by(uid=uid).first()
+    u.name = name
+    session.commit()
+
+
+# update_admin('new name', '480542758')
+
+
+
 def is_admin(uid):
     admins = get_all_admins()
     for a in admins:

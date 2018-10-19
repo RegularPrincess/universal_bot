@@ -42,6 +42,9 @@ class BcstByTime(db.Model):
     def __repr__(self):
         return '<BcstByTime %r>' % (self.msg)
 
+    def date_time_is_not_sign(self):
+        return self.start_date is None
+
 
 class Msgs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
