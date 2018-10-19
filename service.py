@@ -81,6 +81,7 @@ def admin_message_processing(uid, text):
         num = text.split(' ')[1]
         if num[0] == '7' and len(num) == 11:
             start_conwersation(num)
+            mt.send_message(uid, 'Сообщение отправлено через whatsapp')
         else:
             mt.send_message(uid, 'Не верный формат. Необходимо:whatsapp 79999999999')
 
@@ -229,8 +230,11 @@ def message_processing(uid, text, source):
                 obj.msg = db.get_congrat_msg()
                 thread_manager.add_brcst_thread(obj)
             except BaseException as e:
+                print(e.with_traceback(e.__traceback__))
                 print(e)
+                print(e.__traceback__)
             finally:
+                print('Пользователь закончил опрос')
                 mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
                 db.update_user(uid, READY_TO_ENROLL[uid].ei)
                 READY_TO_ENROLL[uid].last_variants = None
