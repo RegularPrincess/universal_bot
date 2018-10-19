@@ -191,9 +191,20 @@ def message_processing(uid, text, source):
             else:
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
         if len(READY_TO_ENROLL[uid].qsts) > 0:
-            READY_TO_ENROLL[uid].ei.answers += text + '; '
-            q = READY_TO_ENROLL[uid].qsts.pop(0)
-            msg = q.quest
+            if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
+                # пропускаем вопрос о др
+                q = READY_TO_ENROLL[uid].qsts.pop(0)
+                READY_TO_ENROLL[uid].need_birthday = False
+                if len(READY_TO_ENROLL[uid].qsts) > 0:
+                    q = READY_TO_ENROLL[uid].qsts.pop(0)
+                    msg = q.quest
+                else:
+                    q = m.QuestMsg(quest='Спасибо, что уделили время!')
+                    msg = q.quest
+            else:
+                READY_TO_ENROLL[uid].ei.answers += text + '; '
+                q = READY_TO_ENROLL[uid].qsts.pop(0)
+                msg = q.quest
             if q.answs is not None and len(q.answs) > 0:
                 answrs = q.answs.split('; ')
                 READY_TO_ENROLL[uid].last_variants = answrs
@@ -218,10 +229,11 @@ def message_processing(uid, text, source):
                 thread_manager.add_brcst_thread(obj)
             except BaseException as e:
                 print(e)
-            mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-            db.update_user(uid, READY_TO_ENROLL[uid].ei)
-            READY_TO_ENROLL[uid].last_variants = None
-            utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+            finally:
+                mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+                db.update_user(uid, READY_TO_ENROLL[uid].ei)
+                READY_TO_ENROLL[uid].last_variants = None
+                utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):

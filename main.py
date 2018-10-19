@@ -46,6 +46,8 @@ def whatsapp_new_msg():
             print(uid)
             if not from_me:
                 answer = s.message_processing(uid, text, cnst.WHATSAPP)
+            elif '#' in text:
+                answer = s.message_processing(uid, text[1:], cnst.WHATSAPP)
             return 'ok'
     except BaseException as e:
         print(e)

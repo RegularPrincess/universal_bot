@@ -83,3 +83,4 @@ class EnrollObj:
         self.ei = enroll_info
         self.qsts = quests
         self.last_variants = None
+        self.need_birthday = True
