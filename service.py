@@ -44,7 +44,7 @@ def admin_message_processing(uid, text):
 
     elif text == cnst.BTN_ADD_BROADCAST_BY_TIME:
         IN_ADMIN_PANEL[uid] = m.BcstByTime()
-        mt.send_message(uid, cnst.MSG_ADD_BRDCST_BY_TIME, cnst.KEYBOARD_CANCEL)
+        mt.send_keyboard_vk_message(uid, cnst.MSG_ADD_BRDCST_BY_TIME, cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_BROADCAST_BY_TIME:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST_BY_TIME
@@ -53,7 +53,7 @@ def admin_message_processing(uid, text):
         for a in brtcsts:
             msg += cnst.MSG_PLANNED_BCST.format(a.start_date, a.time, a.repet_days, a.id, a.msg)
         msg += 'Для удаления рассылки введите её id.'
-        mt.send_message(uid, msg, cnst.KEYBOARD_CANCEL)
+        mt.send_keyboard_vk_message(uid, msg, cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_QUESTIONS:
         IN_ADMIN_PANEL[uid] = m.QuestMsg()
