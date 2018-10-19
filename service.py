@@ -284,10 +284,10 @@ def start_conwersation(number):
 
 
 IN_ADMIN_PANEL['259056624'] = 0
-message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
-message_processing('79991577222', '3r56g', cnst.WHATSAPP)
-message_processing('79991577222', '222222', cnst.WHATSAPP)
-message_processing('79991577222', '2', cnst.WHATSAPP)
+# message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
+# message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+# message_processing('79991577222', '222222', cnst.WHATSAPP)
+# message_processing('79991577222', '2', cnst.WHATSAPP)
 
 
 
