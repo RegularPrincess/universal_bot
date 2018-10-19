@@ -94,7 +94,7 @@ def admin_message_processing(uid, text):
                 mt.send_message(uid, cnst.MSG_ACCEPT_BROADCAST)
         else:
             IN_ADMIN_PANEL[uid].msg = text
-            mt.send_message(uid, 'Рассылка создана!', cnst.KEYBOARD_ADMIN)
+            mt.send_keyboard_vk_message(uid, 'Рассылка создана!', cnst.KEYBOARD_ADMIN)
             thread_manager.add_brcst_thread(IN_ADMIN_PANEL[uid])
             IN_ADMIN_PANEL[uid] = None
 
