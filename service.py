@@ -188,10 +188,11 @@ def message_processing(uid, text, source):
     elif uid in READY_TO_ENROLL:
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
-                index = int(text)
+                index = int(text) - 1
                 text = READY_TO_ENROLL[uid].last_variants[index]
             else:
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
+                return
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
                 # пропускаем вопрос о др
@@ -215,6 +216,7 @@ def message_processing(uid, text, source):
                 READY_TO_ENROLL[uid].last_variants = None
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
         else:
+            READY_TO_ENROLL[uid].ei.answers += text
             try:
                 answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
                 if datetime.today().month > int(answs[1]) and \
@@ -235,8 +237,10 @@ def message_processing(uid, text, source):
                 print(e.__traceback__)
             finally:
                 print('Пользователь закончил опрос')
+                msg = 'Спасибо, что уделили время!'
+                mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
                 mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-                db.update_user(uid, READY_TO_ENROLL[uid].ei)
+                db.update_user(READY_TO_ENROLL[uid].ei, uid)
                 READY_TO_ENROLL[uid].last_variants = None
                 utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
@@ -281,6 +285,10 @@ def start_conwersation(number):
 
 IN_ADMIN_PANEL['259056624'] = 0
 message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
-message_processing('79991577222', '3r56g', cnst.VK)
+message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+message_processing('79991577222', '222222', cnst.WHATSAPP)
+message_processing('79991577222', '2', cnst.WHATSAPP)
+
+
 
 
