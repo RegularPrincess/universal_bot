@@ -261,10 +261,6 @@ def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
 
 
-# message_processing('259056624', 'admin', cnst.VK)
-# message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
-
-
 def start_conwersation(number):
     new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
@@ -279,6 +275,12 @@ def start_conwersation(number):
         q = quests.pop(0)
         mt.send_message(number, q.quest, cnst.WHATSAPP)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests)
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
+
+
+
+IN_ADMIN_PANEL['259056624'] = 0
+message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
+message_processing('79991577222', '3r56g', cnst.VK)
 
 

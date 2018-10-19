@@ -79,8 +79,8 @@ class EnrollInfo(db.Model):
 
 
 class EnrollObj:
-    def __init__(self, enroll_info, quests):
+    def __init__(self, enroll_info, quests, need_birthday=True):
         self.ei = enroll_info
         self.qsts = quests
         self.last_variants = None
-        self.need_birthday = True
+        self.need_birthday = need_birthday
