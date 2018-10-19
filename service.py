@@ -111,6 +111,7 @@ def admin_message_processing(uid, text):
             if utils.isint(qid_str) and \
                             IN_ADMIN_PANEL[uid].quest is None and IN_ADMIN_PANEL[uid].id is None:
                 IN_ADMIN_PANEL[uid].id = int(qid_str)
+                print('id set' + qid_str)
                 text = ' '.join(text.split(' ')[1:])
             if IN_ADMIN_PANEL[uid].quest == '':
                 IN_ADMIN_PANEL[uid].quest = text
