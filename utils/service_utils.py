@@ -41,8 +41,9 @@ def del_uid_from_dict(uid, dict_):
 
 def send_message_admins(info):
     admins = db.get_all_admins()
-    note = 'Примечания : {}'.format("\n".join(info.answers))
-    vk.send_message_much(admins, cnst.NOTIFY_ADMIN.format(info.uid, note))
+    uids = [a.uid for a in admins]
+    note = 'Примечания : {}'.format("\n".join(info.answers.split('; ')))
+    vk.send_message_much(uids, cnst.NOTIFY_ADMIN.format(info.uid, note))
 
 
 def send_message_admins_after_restart():

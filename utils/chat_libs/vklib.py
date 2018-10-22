@@ -56,7 +56,7 @@ def send_message_much(user_ids, text):
     """
     Отправить сообщения многим пользователям за один запрос
     """
-    d = str(user_ids).strip('[]').replace(' ', '')
+    d = str(user_ids).strip('[]').replace(' ', '').replace("'", '')
     print(d)
     data = {
         'message': text,
