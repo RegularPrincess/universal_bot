@@ -275,18 +275,25 @@ def not_ready_to_enroll(uid):
 def start_conwersation(number):
     new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
-    db.add_any(user)
     msg = db.get_first_msg()
     mt.send_message(number, msg, cnst.WHATSAPP)
-    time.sleep(1)
     quests = db.get_all_quests()
-    if not new:
-        quests = quests[2:]
-    if len(quests) > 0:
-        q = quests.pop(0)
-        mt.send_message(number, q.quest, cnst.WHATSAPP)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
         user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
+    if not new:
+        quests = quests[2:]
+    else:
+        db.add_any(user)
+    if len(quests) > 0:
+        q = quests.pop(0)
+        msg = q.quest
+        if q.answs is not None and len(q.answs) > 0:
+            answrs = q.answs.split('; ')
+            READY_TO_ENROLL[number].last_variants = answrs
+            mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
+        else:
+            READY_TO_ENROLL[number].last_variants = None
+            mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
 def admins_to_admin_menu():
@@ -303,7 +310,7 @@ message_processing('259056624', 'admin', cnst.VK)
 # message_processing('259056624', 'рассылочка', cnst.VK)
 
 
-# message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
+message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
 # message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
