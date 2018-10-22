@@ -82,7 +82,7 @@ def admin_message_processing(uid, text):
 
     elif text in cnst.ADMIN_KEY_WORDS:
         IN_ADMIN_PANEL[uid] = ''
-        mt.send_keyboard_vk_message(uid, cnst.MSG_CANCELED_MESSAGE, cnst.KEYBOARD_ADMIN)
+        mt.send_keyboard_vk_message(uid, cnst.MSG_ADMIN_PANEL, cnst.KEYBOARD_ADMIN)
 
     elif 'whatsapp' in text:
         num = text.split(' ')[1]
@@ -278,12 +278,12 @@ def start_conwersation(number):
     msg = db.get_first_msg()
     mt.send_message(number, msg, cnst.WHATSAPP)
     quests = db.get_all_quests()
-    READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
     if not new:
         quests = quests[2:]
     else:
         db.add_any(user)
+    READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
     if len(quests) > 0:
         q = quests.pop(0)
         msg = q.quest
@@ -303,7 +303,7 @@ def admins_to_admin_menu():
 
 admins_to_admin_menu()
 
-message_processing('259056624', 'admin', cnst.VK)
+# message_processing('259056624', 'admin', cnst.VK)
 
 
 # message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
@@ -311,9 +311,9 @@ message_processing('259056624', 'admin', cnst.VK)
 
 
 message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
-# message_processing('79991577222', '3r56g', cnst.WHATSAPP)
-# message_processing('79991577222', '222222', cnst.WHATSAPP)
-# message_processing('79991577222', '2', cnst.WHATSAPP)
+message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+message_processing('79991577222', '222222', cnst.WHATSAPP)
+message_processing('79991577222', '2', cnst.WHATSAPP)
 
 
 
