@@ -21,7 +21,7 @@ vk_api_url = config.vk_api_url
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, db_name)
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 app = Flask(__name__)
@@ -60,8 +60,8 @@ def debug():
     # answer = s.message_processing('1111', 'Администраторы', cnst.VK)
     # s.start_conwersation('79991577222')
     # s.message_processing('79991577222', 'ответ 1', cnst.WHATSAPP)
-    answer = s.message_processing('259056624', 'admin', cnst.VK)
-    answer = s.message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
+    # answer = s.message_processing('259056624', 'admin', cnst.VK)
+    # answer = s.message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
     return "hello world"
 
 

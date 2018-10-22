@@ -112,6 +112,48 @@ def send_message_with_photo(user_id, text, photo):
     print(res.text)
 
 
+def get_doc_upload_server1(peer_id):
+    """
+    Получить сервер ВК для загрузки фото в ЛС
+    """
+    data = {
+        'peer_id': peer_id,
+        'access_token': config.token,
+        'v': '5.78'
+    }
+    res = requests.post(config.vk_api_url + 'docs.getMessagesUploadServer', data=data)
+    return res.json()
+
+
+def save_doc(file):
+    """
+    Сохранить документ ВК
+    """
+    data = {
+        'file': file,
+        'access_token': config.token,
+        'v': api_ver
+    }
+    res = requests.post(config.vk_api_url + 'docs.save', data=data)
+    return res.json()
+
+
+def send_message_doc(user_id, text, doc):
+    """
+    Отправить сообщение с документом
+    """
+    data = {
+        'message': text,
+        'user_id': user_id,
+        'attachment': doc,
+        'access_token': config.token,
+        'v': api_ver
+    }
+    requests.post(config.vk_api_url + 'messages.send', data=data)
+
+
+
+
 def get_keyboard_from_list(list):
     keyboard = copy.deepcopy(cnst.keyboard_pattern.copy())
     c = 0

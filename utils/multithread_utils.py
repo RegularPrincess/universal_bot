@@ -75,6 +75,17 @@ class _ThreadSendDataByTimeout(Thread):
         self.is_stopped = True
 
 
+class ThreadSubs(Thread):
+    def __init__(self, uid):
+        """Инициализация потока"""
+        Thread.__init__(self)
+        self.uid = uid
+
+    def run(self):
+        vk_doc_link = utils.make_subs_file(self.uid)
+        vk.send_message_doc(self.uid, cnst.MSG_SUBS, vk_doc_link)
+
+
 def send_message(uid, msg, msgr=cnst.VK):
     # keyboard - list buttons
     if msgr == cnst.VK:
@@ -107,7 +118,6 @@ def send_keyboard_vk_message(uid, msg, keyboard):
 def send_msg_all_whatsapp_subs(msg):
     p = Process(target=_send_msg_all_whatsapp_subs, args=(msg,))
     p.start()
-
 
 def send_msg_welcome(uid, out=cnst.WHATSAPP):
 

@@ -1,4 +1,5 @@
 import json
+import os
 import re
 
 import datetime
@@ -128,6 +129,43 @@ def add_quest_msg(quest, answs, vid=None):
         q = m.QuestMsg(quest, answs, db_id)
         db.add_any(q)
         ID_WRAPPER.update()
+
+
+def make_subs_file(uid):
+    users = db.get_all_users()
+    if len(users) == 0:
+        text = 'В боте ещё нет подписчиков'
+        vk.send_message(uid, text)
+        return 'ok'
+    filename = 'subs.csv'
+    out = open(filename, 'a')
+    text = 'Номер; Ответы пользователя; День и месяц рождения (ДД.ММ)\n'
+    i = 0
+    for x in users:
+        i += 1
+        if isint(x.answers.split(';')[0]) and isint(x.answers.split(';')[1]):
+            date = '{}.{}'.format(int(x.answers.split(';')[1]), int(x.answers.split(';')[0]))
+        else:
+            date = 'None'
+        text += '{};{};{}\n'.format(x.number, x.answers.replace(';', ' | '), date)
+        if i > 1000:
+            out.write(text)
+            text = ''
+            i = 0
+    out.write(text)
+    out.close()
+    res = vk.get_doc_upload_server1(uid)
+    print(res)
+    upload_url = res['response']['upload_url']
+    files = {'file': open(filename, 'r')}
+    response = requests.post(upload_url, files=files)
+    result = response.json()
+    print(result)
+    r = vk.save_doc(result['file'])
+    vk_doc_link = 'doc{!s}_{!s}'.format(r['response'][0]['owner_id'], r['response'][0]['id'])
+    print(vk_doc_link)
+    os.remove(filename)
+    return vk_doc_link
 
 
 def isint(s):

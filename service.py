@@ -20,14 +20,14 @@ thread_manager.run_brdcst_shedule()
 
 
 def admin_message_processing(uid, text):
-    if text == cnst.MSG_ADMIN_EXIT:
-        utils.del_uid_from_dict(uid, IN_ADMIN_PANEL)
-        # mt.send_msg_welcome(uid, utils.get_user_keyboard())
-
-    elif text == cnst.BTN_BROADCAST:
+    if text == cnst.BTN_BROADCAST:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST
         # mt.send_message(uid, cnst.MSG_USER_SHORT_INFO.format(all_count, msg_allowed_count))
         mt.send_keyboard_vk_message(uid, cnst.MSG_ACCEPT_BROADCAST, cnst.KEYBOARD_CANCEL)
+
+    elif text == cnst.BTN_SUBS:
+        pg = mt.ThreadSubs(uid)
+        pg.start()
 
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS
@@ -41,6 +41,9 @@ def admin_message_processing(uid, text):
     elif text == cnst.BTN_ADD_ADMIN:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADD_ADMIN
         mt.send_keyboard_vk_message(uid, cnst.MSG_ADMIN_ADDING, cnst.KEYBOARD_CANCEL)
+
+    elif text == cnst.BTN_BROADCASTS:
+        mt.send_keyboard_vk_message(uid, 'Меню рассылок:', cnst.KEYBOARD_BROADCASTS)
 
     elif text == cnst.BTN_ADD_BROADCAST_BY_TIME:
         IN_ADMIN_PANEL[uid] = m.BcstByTime()
@@ -180,7 +183,7 @@ def admin_message_processing(uid, text):
 
 def message_processing(uid, text, source):
 
-    if uid in IN_ADMIN_PANEL:
+    if db.is_admin(str(uid)):
         admin_message_processing(uid, text)
         return 'ok'
 
@@ -284,6 +287,10 @@ def start_conwersation(number):
 
 
 IN_ADMIN_PANEL['259056624'] = 0
+# message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
+# message_processing('259056624', 'рассылочка', cnst.VK)
+
+
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
 # message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
