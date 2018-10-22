@@ -209,8 +209,12 @@ def message_processing(uid, text, source):
                     q = READY_TO_ENROLL[uid].qsts.pop(0)
                     msg = q.quest
                 else:
-                    q = m.QuestMsg(quest='Спасибо, что уделили время!')
-                    msg = q.quest
+                    mt.send_message(uid, 'Спасибо, что уделили время', msgr=READY_TO_ENROLL[uid].ei.msgr)
+                    mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+                    db.update_user(READY_TO_ENROLL[uid].ei, uid)
+                    READY_TO_ENROLL[uid].last_variants = None
+                    utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+                    return
             else:
                 READY_TO_ENROLL[uid].ei.answers += text + '; '
                 q = READY_TO_ENROLL[uid].qsts.pop(0)
