@@ -80,6 +80,10 @@ def admin_message_processing(uid, text):
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, cnst.MSG_CANCELED_MESSAGE, cnst.KEYBOARD_ADMIN)
 
+    elif text in cnst.ADMIN_KEY_WORDS:
+        IN_ADMIN_PANEL[uid] = ''
+        mt.send_keyboard_vk_message(uid, cnst.MSG_CANCELED_MESSAGE, cnst.KEYBOARD_ADMIN)
+
     elif 'whatsapp' in text:
         num = text.split(' ')[1]
         if num[0] == '7' and len(num) == 11:
@@ -285,8 +289,16 @@ def start_conwersation(number):
         user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
 
 
+def admins_to_admin_menu():
+    admins = db.get_all_admins()
+    for a in admins:
+        IN_ADMIN_PANEL[a.uid] = ''
 
-IN_ADMIN_PANEL['259056624'] = 0
+admins_to_admin_menu()
+
+message_processing('259056624', 'admin', cnst.VK)
+
+
 # message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
 # message_processing('259056624', 'рассылочка', cnst.VK)
 
