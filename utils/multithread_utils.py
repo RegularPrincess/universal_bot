@@ -3,6 +3,9 @@ from multiprocessing import Process
 from threading import Thread
 
 from datetime import datetime, timedelta
+
+import requests
+
 from utils import db_utils as db
 import consts as cnst
 import utils.chat_libs.vklib as vk
@@ -141,3 +144,7 @@ def _send_msg_all_whatsapp_subs(msg):
     users = db.get_all_users()
     for u in users:
         wapp.send_message(u.number, msg)
+
+
+def send_msg_by_file(text, link):
+    return None

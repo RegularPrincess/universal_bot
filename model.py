@@ -84,3 +84,4 @@ class EnrollObj:
         self.qsts = quests
         self.last_variants = None
         self.need_birthday = need_birthday
+        self.skip_next_answ = False

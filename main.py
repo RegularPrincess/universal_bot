@@ -88,7 +88,10 @@ def processing():
         elif data['type'] == 'message_new':
             uid = data['object']['from_id']
             text = data['object']['text']
-            answer = s.message_processing(uid, text, cnst.VK)
+            attach = data['object']['attachments']
+            if len(attach) > 0:
+                link = attach[0]['doc']
+            answer = s.message_processing(uid, text, cnst.VK, link=link)
             return 'ok'
     except BaseException as e:
         print(e)

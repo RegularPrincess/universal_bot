@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
+import requests
+
 import consts as cnst
 import model as m
 import utils.multithread_utils as mt
@@ -19,7 +21,7 @@ thread_manager.run_brdcst_shedule()
 # utils.send_message_admins_after_restart()
 
 
-def admin_message_processing(uid, text):
+def admin_message_processing(uid, text, link=None):
     if text == cnst.BTN_BROADCAST:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST
         # mt.send_message(uid, cnst.MSG_USER_SHORT_INFO.format(all_count, msg_allowed_count))
@@ -37,6 +39,10 @@ def admin_message_processing(uid, text):
             msg += '🔑 {}, id - {}\n\n'.format(a.name, a.uid)
         msg += cnst.MSG_ADMIN_REMOVING
         mt.send_keyboard_vk_message(uid, msg, cnst.KEYBOARD_CANCEL)
+
+    elif text == cnst.BTN_BROADCAST_BY_FILE:
+        IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST_BY_FILE
+        mt.send_keyboard_vk_message(uid, cnst.MSG_ACCEPT_BROADCAST_BY_FILE, cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_ADD_ADMIN:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADD_ADMIN
@@ -139,6 +145,12 @@ def admin_message_processing(uid, text):
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, "Разослано", cnst.KEYBOARD_ADMIN)
 
+    elif IN_ADMIN_PANEL[uid] == cnst.BTN_BROADCAST_BY_FILE:
+        send_msg_by_file(text, link)
+        IN_ADMIN_PANEL.clear()
+        IN_ADMIN_PANEL[uid] = ''
+        mt.send_keyboard_vk_message(uid, "Разослано", cnst.KEYBOARD_ADMIN)
+
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
         mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
@@ -185,11 +197,14 @@ def admin_message_processing(uid, text):
         # mt.send_message(uid, cnst.MSG_DEFAULT_ANSWER)
 
 
-def message_processing(uid, text, source):
+def message_processing(uid, text, source, link=None):
 
     if db.is_admin(str(uid)):
-        admin_message_processing(uid, text)
+        admin_message_processing(uid, text, link=link)
         return 'ok'
+
+    elif uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
+        start_conwersation(uid, welcome_only=True)
 
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
@@ -216,7 +231,9 @@ def message_processing(uid, text, source):
                     utils.del_uid_from_dict(uid, READY_TO_ENROLL)
                     return
             else:
-                READY_TO_ENROLL[uid].ei.answers += text + '; '
+                if not READY_TO_ENROLL[uid].skip_next_answ:
+                    READY_TO_ENROLL[uid].ei.answers += text + '; '
+                    READY_TO_ENROLL[uid].skip_next_answ = False
                 q = READY_TO_ENROLL[uid].qsts.pop(0)
                 msg = q.quest
             if q.answs is not None and len(q.answs) > 0:
@@ -276,7 +293,7 @@ def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
 
 
-def start_conwersation(number):
+def start_conwersation(number, welcome_only=False):
     new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
@@ -288,6 +305,9 @@ def start_conwersation(number):
         db.add_any(user)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
         user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
+    if welcome_only:
+        READY_TO_ENROLL[number].skip_next_answ = True
+        return
     if len(quests) > 0:
         q = quests.pop(0)
         msg = q.quest
@@ -298,6 +318,17 @@ def start_conwersation(number):
         else:
             READY_TO_ENROLL[number].last_variants = None
             mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
+
+
+def send_msg_by_file(text, link):
+    r = requests.get(link, allow_redirects=True)
+    file = open('subs_num.txt', 'wb')
+    file.write(r.content)
+    file.close()
+    with open("subs_num.txt") as file:
+        array = [row.strip() for row in file]
+        for num in array:
+            start_conwersation(num, welcome_only=True)
 
 
 def admins_to_admin_menu():
