@@ -89,6 +89,7 @@ def processing():
             uid = data['object']['from_id']
             text = data['object']['text']
             attach = data['object']['attachments']
+            link = None
             if len(attach) > 0:
                 link = attach[0]['doc']
             answer = s.message_processing(uid, text, cnst.VK, link=link)
