@@ -12,32 +12,32 @@ session = db.session
 
 
 def get_all_quests():
-    q = session.query(m.QuestMsg)
+    q = db.session.query(m.QuestMsg)
     return q.all()
 
 
 def get_all_admins():
-    q = session.query(m.Admin)
+    q = db.session.query(m.Admin)
     return q.all()
 
 
 def get_all_users():
-    q = session.query(m.EnrollInfo)
+    q = db.session.query(m.EnrollInfo)
     return q.all()
 
 
 def get_all_bcsts():
-    q = session.query(m.BcstByTime)
+    q = db.session.query(m.BcstByTime)
     return q.all()
 
 
 def get_first_msg():
-    q = session.query(m.Msgs)
+    q = db.session.query(m.Msgs)
     return q.all()[0].first_msg
 
 
 def get_congrat_msg():
-    q = session.query(m.Msgs)
+    q = db.session.query(m.Msgs)
     return q.all()[0].congrat_msg
 
 
@@ -66,13 +66,13 @@ def delete_brdcst(id):
 
 
 def update_first_msg(text):
-    msg = session.query(m.Msgs)
+    msg = db.session.query(m.Msgs)
     msg[0].first_msg = text
     session.commit()
 
 
 def update_congrat_msg(text):
-    msg = session.query(m.Msgs)
+    msg = db.session.query(m.Msgs)
     msg[0].congrat_msg = text
     session.commit()
 
@@ -90,7 +90,7 @@ def add_any(obj):
 
 
 def update_user(user, uid):
-    u = session.query(m.EnrollInfo).filter_by(uid=uid).first()
+    u = db.session.query(m.EnrollInfo).filter_by(uid=uid).first()
     u.answers = user.answers
     print(user.answers)
     u.uid = user.uid
@@ -99,13 +99,13 @@ def update_user(user, uid):
 
 
 def update_admin(name, uid):
-    u = session.query(m.Admin).filter_by(uid=uid).first()
+    u = db.session.query(m.Admin).filter_by(uid=uid).first()
     u.name = name
     session.commit()
 
 
 def update_quest(quest_msg, id):
-    u = session.query(m.QuestMsg).filter_by(id=id).first()
+    u = db.session.query(m.QuestMsg).filter_by(id=id).first()
     u.quest = quest_msg.quest
     u.answs = quest_msg.answs
     session.commit()
@@ -124,7 +124,7 @@ def is_admin(uid):
 
 
 def is_new_user(uid):
-    d = session.query(m.EnrollInfo).filter_by(uid=uid).first()
+    d = db.session.query(m.EnrollInfo).filter_by(uid=uid).first()
     return d is None
 
 

@@ -275,7 +275,7 @@ def message_processing(uid, text, source, link=None):
                 print('Пользователь закончил опрос')
                 msg = 'Спасибо, что уделили время!'
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
-                mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+                # mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
                 db.update_user(READY_TO_ENROLL[uid].ei, uid)
                 READY_TO_ENROLL[uid].last_variants = None
                 utils.del_uid_from_dict(uid, READY_TO_ENROLL)
@@ -349,7 +349,7 @@ admins_to_admin_menu()
 
 # message_processing('259056624', '', cnst.VK, link='https://vk.com/doc259056624_478912520?hash=207dee4cb744dbf03d&dl=GI2TSMBVGY3DENA:1540288896:debfd5a95c7d878fc4&api=1&no_preview=1')
 
-message_processing('259056624', 'del 79991577222', cnst.VK)
+# message_processing('259056624', 'del 79991577222', cnst.VK)
 
 
 # message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
@@ -360,7 +360,7 @@ message_processing('259056624', 'del 79991577222', cnst.VK)
 # message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
-
+#
 
 
 
