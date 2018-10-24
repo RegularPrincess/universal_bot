@@ -47,6 +47,12 @@ def delete_admin(id):
     session.commit()
 
 
+def delete_user_by_num(num):
+    d = m.EnrollInfo.query.filter_by(number=num)
+    d.delete()
+    session.commit()
+
+
 def delete_quest(id):
     d = m.QuestMsg.query.filter_by(id=id)
     d.delete()

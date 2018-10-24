@@ -98,6 +98,14 @@ def admin_message_processing(uid, text, link=None):
         else:
             mt.send_message(uid, 'Не верный формат. Необходимо:whatsapp 79999999999')
 
+    elif 'del' in text:
+        num = text.split(' ')[1]
+        if num[0] == '7' and len(num) == 11:
+            db.delete_user_by_num(num)
+            mt.send_message(uid, 'Пользователь удален')
+        else:
+            mt.send_message(uid, 'Не верный формат. Необходимо:del 79999999999')
+
     elif isinstance(IN_ADMIN_PANEL[uid], m.BcstByTime):
         if IN_ADMIN_PANEL[uid].date_time_is_not_sign():
             bcst = utils.parse_bcst(text)
@@ -337,8 +345,11 @@ def admins_to_admin_menu():
         IN_ADMIN_PANEL[a.uid] = ''
 
 admins_to_admin_menu()
+# IN_ADMIN_PANEL['259056624'] = cnst.BTN_BROADCAST_BY_FILE
 
-# message_processing('259056624', 'admin', cnst.VK)
+# message_processing('259056624', '', cnst.VK, link='https://vk.com/doc259056624_478912520?hash=207dee4cb744dbf03d&dl=GI2TSMBVGY3DENA:1540288896:debfd5a95c7d878fc4&api=1&no_preview=1')
+
+message_processing('259056624', 'del 79991577222', cnst.VK)
 
 
 # message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
