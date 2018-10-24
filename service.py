@@ -8,6 +8,7 @@ import consts as cnst
 import model as m
 import utils.multithread_utils as mt
 import time
+import copy
 from utils import db_utils as db
 from utils import service_utils as utils
 
@@ -307,7 +308,8 @@ def start_conwersation(number, welcome_only=False):
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
     mt.send_message(number, msg, cnst.WHATSAPP)
-    quests = db.get_all_quests()
+    time.sleep(1)
+    quests = copy.deepcopy(db.get_all_quests())
     if not new:
         quests = quests[2:]
     else:
