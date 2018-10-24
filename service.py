@@ -226,6 +226,7 @@ def message_processing(uid, text, source, link=None):
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
                 # пропускаем вопрос о др
+                READY_TO_ENROLL[uid].ei.answers += text + '; '
                 q = READY_TO_ENROLL[uid].qsts.pop(0)
                 READY_TO_ENROLL[uid].need_birthday = False
                 if len(READY_TO_ENROLL[uid].qsts) > 0:
@@ -275,7 +276,7 @@ def message_processing(uid, text, source, link=None):
                 print('Пользователь закончил опрос')
                 msg = 'Спасибо, что уделили время!'
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
-                # mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+                mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
                 db.update_user(READY_TO_ENROLL[uid].ei, uid)
                 READY_TO_ENROLL[uid].last_variants = None
                 utils.del_uid_from_dict(uid, READY_TO_ENROLL)
