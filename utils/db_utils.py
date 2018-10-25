@@ -10,6 +10,7 @@ from main import db
 db.create_all()
 session = db.session
 
+# m.Msgs.__table__.drop()
 
 def get_all_quests():
     q = db.session.query(m.QuestMsg)
@@ -39,6 +40,11 @@ def get_first_msg():
 def get_congrat_msg():
     q = db.session.query(m.Msgs)
     return q.all()[0].congrat_msg
+
+
+def get_last_msg():
+    q = db.session.query(m.Msgs)
+    return q.all()[0].last_msg
 
 
 def delete_admin(id):
@@ -74,6 +80,12 @@ def update_first_msg(text):
 def update_congrat_msg(text):
     msg = db.session.query(m.Msgs)
     msg[0].congrat_msg = text
+    session.commit()
+
+
+def update_last_msg(text):
+    msg = db.session.query(m.Msgs)
+    msg[0].last_msg = text
     session.commit()
 
 
@@ -114,7 +126,6 @@ def update_quest(quest_msg, id):
 # update_admin('new name', '480542758')
 
 
-
 def is_admin(uid):
     admins = get_all_admins()
     for a in admins:
@@ -134,7 +145,7 @@ def is_quest_msg_empty():
 
 def_admin = m.Admin('Юрий', '259056624')
 add_any(def_admin)
-f_msg = m.Msgs('Приветственное сообщение', 'Поздравительное сообщнеие!')
+f_msg = m.Msgs('Приветственное сообщение', 'Поздравительное сообщнеие!', "Спасибо, что уделили время!")
 add_any(f_msg)
 if is_quest_msg_empty():
     add_any(m.QuestMsg('В каком месяце у вас день рождение? (Введите число от 1 до 12). '

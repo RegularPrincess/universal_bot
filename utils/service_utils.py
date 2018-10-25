@@ -12,7 +12,6 @@ from utils.chat_libs import whatsapplib as wapp
 from utils.chat_libs import vklib as vk
 
 
-
 class id_wrapper:
     def __init__(self):
         self.questions = db.get_all_quests()

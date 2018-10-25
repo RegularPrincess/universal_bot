@@ -24,7 +24,7 @@ class QuestMsg(db.Model):
     answs = db.Column(db.UnicodeText)
 
     def __init__(self, quest='', answs='', id=None):
-        if id is not None: self.id = id
+        self.id = id
         self.quest = quest
         self.answs = answs
 
@@ -50,11 +50,13 @@ class Msgs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     congrat_msg = db.Column(db.UnicodeText)
     first_msg = db.Column(db.UnicodeText)
+    last_msg = db.Column(db.UnicodeText)
     unic = db.Column(db.INTEGER, unique=True, default=1)
 
-    def __init__(self, first_msg, congrat_msg):
+    def __init__(self, first_msg, congrat_msg, last_msg):
         self.first_msg = first_msg
         self.congrat_msg = congrat_msg
+        self.last_msg = last_msg
 
     def __repr__(self):
         return '<Msgs %r>' % (self.first_msg)

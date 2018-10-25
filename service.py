@@ -77,6 +77,12 @@ def admin_message_processing(uid, text, link=None):
         msg += "\n\n Отправьте новое приветственное сообщение для замены."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
+    elif text == cnst.BTN_EDIT_LAST_MSG:
+        IN_ADMIN_PANEL[uid] = cnst.BTN_EDIT_LAST_MSG
+        msg = db.get_first_msg()
+        msg += "\n\n Отправьте новое завершающее сообщение для замены."
+        mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
+
     elif text == cnst.BTN_CONGRATULATION_EDIT:
         IN_ADMIN_PANEL[uid] = cnst.BTN_CONGRATULATION_EDIT
         msg = db.get_congrat_msg()
@@ -132,7 +138,7 @@ def admin_message_processing(uid, text, link=None):
         except ValueError:
             qid_str = text.split(' ')[0]
             if utils.isint(qid_str) and \
-                            IN_ADMIN_PANEL[uid].quest is None and IN_ADMIN_PANEL[uid].id is None:
+                            IN_ADMIN_PANEL[uid].quest == '' and IN_ADMIN_PANEL[uid].id is None:
                 IN_ADMIN_PANEL[uid].id = int(qid_str)
                 print('id set' + qid_str)
                 text = ' '.join(text.split(' ')[1:])
@@ -162,6 +168,11 @@ def admin_message_processing(uid, text, link=None):
 
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
+        mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
+        IN_ADMIN_PANEL[uid] = ''
+
+    elif IN_ADMIN_PANEL[uid] == cnst.BTN_EDIT_LAST_MSG:
+        db.update_last_msg(text)
         mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
         IN_ADMIN_PANEL[uid] = ''
 
@@ -234,7 +245,8 @@ def message_processing(uid, text, source, link=None):
                     q = READY_TO_ENROLL[uid].qsts.pop(0)
                     msg = q.quest
                 else:
-                    mt.send_message(uid, 'Спасибо, что уделили время', msgr=READY_TO_ENROLL[uid].ei.msgr)
+                    last_msg = db.get_last_msg()
+                    mt.send_message(uid, last_msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
                     mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
                     db.update_user(READY_TO_ENROLL[uid].ei, uid)
                     READY_TO_ENROLL[uid].last_variants = None
@@ -275,7 +287,7 @@ def message_processing(uid, text, source, link=None):
                 print(e.__traceback__)
             finally:
                 print('Пользователь закончил опрос')
-                msg = 'Спасибо, что уделили время!'
+                msg = db.get_last_msg()
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
                 mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
                 db.update_user(READY_TO_ENROLL[uid].ei, uid)
@@ -331,7 +343,7 @@ def start_conwersation(number, welcome_only=False):
             mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
-def send_msg_by_file(text, link):
+def send_msg_by_file(text, link):   
     r = requests.get(link, allow_redirects=True)
     file = open('subs_num.txt', 'wb')
     file.write(r.content)
@@ -355,8 +367,8 @@ admins_to_admin_menu()
 # message_processing('259056624', 'del 79991577222', cnst.VK)
 
 
-# message_processing('259056624', cnst.BTN_BROADCAST, cnst.VK)
-# message_processing('259056624', 'рассылочка', cnst.VK)
+message_processing('259056624', cnst.BTN_QUESTIONS, cnst.VK)
+message_processing('259056624', '1 wert', cnst.VK)
 
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
