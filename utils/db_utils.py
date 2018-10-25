@@ -7,10 +7,11 @@ import model as m
 
 from main import db
 
+
+m.Msgs.__table__.drop(db.engine)
 db.create_all()
 session = db.session
 
-# m.Msgs.__table__.drop()
 
 def get_all_quests():
     q = db.session.query(m.QuestMsg)

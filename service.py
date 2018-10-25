@@ -367,8 +367,8 @@ admins_to_admin_menu()
 # message_processing('259056624', 'del 79991577222', cnst.VK)
 
 
-message_processing('259056624', cnst.BTN_QUESTIONS, cnst.VK)
-message_processing('259056624', '1 wert', cnst.VK)
+# message_processing('259056624', cnst.BTN_QUESTIONS, cnst.VK)
+# message_processing('259056624', '1 wert', cnst.VK)
 
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
