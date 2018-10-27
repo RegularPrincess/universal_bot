@@ -79,7 +79,7 @@ def admin_message_processing(uid, text, link=None):
 
     elif text == cnst.BTN_EDIT_LAST_MSG:
         IN_ADMIN_PANEL[uid] = cnst.BTN_EDIT_LAST_MSG
-        msg = db.get_first_msg()
+        msg = db.get_last_msg()
         msg += "\n\n Отправьте новое завершающее сообщение для замены."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
@@ -219,7 +219,7 @@ def admin_message_processing(uid, text, link=None):
 
 def message_processing(uid, text, source, link=None):
 
-    if db.is_admin(str(uid)):
+    if db.is_admin(str(uid)) and source == cnst.VK:
         admin_message_processing(uid, text, link=link)
         return 'ok'
 
@@ -228,71 +228,26 @@ def message_processing(uid, text, source, link=None):
 
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
+        # блок для ватсапп, где нет кнопок и варианты цифрами
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
                 index = int(text) - 1
                 text = READY_TO_ENROLL[uid].last_variants[index]
+                READY_TO_ENROLL[uid].last_variants = None
             else:
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
                 return
+        #
+
+        READY_TO_ENROLL[uid].ei.answers.append(text)
         if len(READY_TO_ENROLL[uid].qsts) > 0:
-            if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
-                # пропускаем вопрос о др
-                READY_TO_ENROLL[uid].ei.answers += text + '; '
-                q = READY_TO_ENROLL[uid].qsts.pop(0)
-                READY_TO_ENROLL[uid].need_birthday = False
-                if len(READY_TO_ENROLL[uid].qsts) > 0:
-                    q = READY_TO_ENROLL[uid].qsts.pop(0)
-                    msg = q.quest
-                else:
-                    last_msg = db.get_last_msg()
-                    mt.send_message(uid, last_msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
-                    mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-                    db.update_user(READY_TO_ENROLL[uid].ei, uid)
-                    READY_TO_ENROLL[uid].last_variants = None
-                    utils.del_uid_from_dict(uid, READY_TO_ENROLL)
-                    return
-            else:
-                if not READY_TO_ENROLL[uid].skip_next_answ:
-                    READY_TO_ENROLL[uid].ei.answers += text + '; '
-                    READY_TO_ENROLL[uid].skip_next_answ = False
-                q = READY_TO_ENROLL[uid].qsts.pop(0)
-                msg = q.quest
-            if q.answs is not None and len(q.answs) > 0:
-                answrs = q.answs.split('; ')
-                READY_TO_ENROLL[uid].last_variants = answrs
-                mt.send_message_keyboard(uid, msg, answrs, msgr=READY_TO_ENROLL[uid].ei.msgr)
-            else:
-                READY_TO_ENROLL[uid].last_variants = None
-                mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
+            q = READY_TO_ENROLL[uid].qsts.pop(0)
+            READY_TO_ENROLL[uid].last_variants = q.answs
+            mt.send_quest(uid, q, msgr=READY_TO_ENROLL[uid].ei.msgr)
         else:
-            READY_TO_ENROLL[uid].ei.answers += text
-            try:
-                answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
-                if datetime.today().month > int(answs[1]) and \
-                    datetime.today().day > int(answs[0]):
-                    y = str(datetime.today().year + 1)
-                else:
-                    y = str(datetime.today().year + 1)
-                dmy = answs[1] + '.' + answs[0] + '.' + y
-                obj = m.BcstByTime()
-                obj.start_date = datetime.strptime(dmy, '%d.%m.%Y').date()
-                obj.time = datetime.strptime('10:00', '%H:%M').time()
-                obj.repet_days = 365
-                obj.msg = db.get_congrat_msg()
-                thread_manager.add_brcst_thread(obj)
-            except BaseException as e:
-                print(e.with_traceback(e.__traceback__))
-                print(e)
-                print(e.__traceback__)
-            finally:
-                print('Пользователь закончил опрос')
-                msg = db.get_last_msg()
-                mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
-                mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-                db.update_user(READY_TO_ENROLL[uid].ei, uid)
-                READY_TO_ENROLL[uid].last_variants = None
-                utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+            mt.send_last_msge(uid, READY_TO_ENROLL[uid].ei.msgr)
+            db.update_user(uid, READY_TO_ENROLL[uid].ei)
+            del READY_TO_ENROLL[uid]
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):
@@ -372,10 +327,68 @@ admins_to_admin_menu()
 
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
-# message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+# message_processing('70000000000', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
-#
+
+
+# if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
+#     # пропускаем вопрос о др
+#     READY_TO_ENROLL[uid].ei.answers += text + '; '
+#     q = READY_TO_ENROLL[uid].qsts.pop(0)
+#     READY_TO_ENROLL[uid].need_birthday = False
+#     if len(READY_TO_ENROLL[uid].qsts) > 0:
+#         q = READY_TO_ENROLL[uid].qsts.pop(0)
+#         msg = q.quest
+#     else:
+#         last_msg = db.get_last_msg()
+#         mt.send_message(uid, last_msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
+#         mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+#         db.update_user(READY_TO_ENROLL[uid].ei, uid)
+#         READY_TO_ENROLL[uid].last_variants = None
+#         utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+#         return
+# else:
+#     if not READY_TO_ENROLL[uid].skip_next_answ:
+#         READY_TO_ENROLL[uid].ei.answers += text + '; '
+#         READY_TO_ENROLL[uid].skip_next_answ = False
+#     q = READY_TO_ENROLL[uid].qsts.pop(0)
+#     msg = q.quest
+# if q.answs is not None and len(q.answs) > 0:
+#     answrs = q.answs.split('; ')
+#     READY_TO_ENROLL[uid].last_variants = answrs
+#     mt.send_message_keyboard(uid, msg, answrs, msgr=READY_TO_ENROLL[uid].ei.msgr)
+# else:
+#     READY_TO_ENROLL[uid].last_variants = None
+#     mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
+# else:
+# READY_TO_ENROLL[uid].ei.answers += text
+# try:
+#     answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
+#     if datetime.today().month > int(answs[1]) and \
+#                     datetime.today().day > int(answs[0]):
+#         y = str(datetime.today().year + 1)
+#     else:
+#         y = str(datetime.today().year + 1)
+#     dmy = answs[1] + '.' + answs[0] + '.' + y
+#     obj = m.BcstByTime()
+#     obj.start_date = datetime.strptime(dmy, '%d.%m.%Y').date()
+#     obj.time = datetime.strptime('10:00', '%H:%M').time()
+#     obj.repet_days = 365
+#     obj.msg = db.get_congrat_msg()
+#     thread_manager.add_brcst_thread(obj)
+# except BaseException as e:
+#     print(e.with_traceback(e.__traceback__))
+#     print(e)
+#     print(e.__traceback__)
+# finally:
+#     print('Пользователь закончил опрос')
+#     msg = db.get_last_msg()
+#     mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
+#     mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
+#     db.update_user(READY_TO_ENROLL[uid].ei, uid)
+#     READY_TO_ENROLL[uid].last_variants = None
+#     utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
 
 

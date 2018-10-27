@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from flask import Flask
+from flask import Flask, Response
 from flask import json
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
 import os
+import telebot
+# import telebot.types as types
+# from viberbot.api.event_type import EventType
+from viberbot.api.messages import TextMessage
+from viberbot.api.viber_requests import ViberMessageRequest, ViberConversationStartedRequest
 
 import config
 
 token = config.token
 confirmation_token = config.confirmation_token
 secret_key = config.secret_key
-group_id = config.group_id
-admin_id = config.admin_id
-admin_name = config.admin_name
 db_name = config.db_name
 bot_name = config.bot_name
 vk_api_url = config.vk_api_url
+bot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -31,6 +34,43 @@ db = SQLAlchemy(app)
 
 import service as s
 import consts as cnst
+
+'''if isinstance(viber_request, ViberMessageRequest):
+        message = viber_request.message
+        # lets echo back
+        viber.send_messages(viber_request.sender.id, [
+            message
+        ])'''
+#
+#
+# @bot.message_handler(content_types=["text"])
+# def handle_text(message):
+#     uid = message.from_user.id
+#     text = message.text
+
+
+@app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
+def viber():
+    if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
+        print(request.get_data())
+        print('Неудачная попытка установить вебхук')
+        return Response(status=403)
+    # this library supplies a simple way to receive a request object
+    viber_request = viber.parse_request(request.get_data())
+    # if viber_request.event_type == EventType.CONVERSATION_STARTED:
+    #     pass
+    if isinstance(viber_request, ViberMessageRequest):
+        message = viber_request.message
+        text = message.text
+        uid = viber_request.sender.id
+        s.message_processing(uid, text, cnst.VIBER)
+    elif isinstance(viber_request, ViberConversationStartedRequest):
+        # Запрашивать номер телефона
+        uid = viber_request.get_user().get_id()
+        viber.send_messages(uid, [
+            TextMessage(text="Welcome!")
+        ])
+    return Response(status=200)
 
 
 @app.route(rule='/{}/request.in'.format(bot_name), methods=['POST'])

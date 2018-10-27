@@ -4,6 +4,7 @@
 import json
 import requests
 import config
+import time
 import logging as log
 
 
@@ -13,14 +14,20 @@ api_ver = config.api_ver
 def send_message(user_id, text):
     payload = {
         "phone": user_id,
+        # 'chatId': '70000000000@c.us',
         "body": text
     }
     print(payload)
+    'showMessagesQueue'
     url = 'https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
     response = requests.post(url, data=payload)
     print(response)
     print(response.text)
     data = json.loads(response.text)
+    # time.sleep(10)
+    # url = 'https://eu21.chat-api.com/instance13769/showMessagesQueue?token=8xfrmb4v0c29qea2'
+    # response = requests.get(url, data=payload)
+    # print(response)
     try:
         return data['sent']
     except BaseException as e:

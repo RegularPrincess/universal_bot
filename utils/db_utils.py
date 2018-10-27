@@ -104,7 +104,7 @@ def add_any(obj):
 
 def update_user(user, uid):
     u = db.session.query(m.EnrollInfo).filter_by(uid=uid).first()
-    u.answers = user.answers
+    u.answers = '; '.join(user.answers)
     print(user.answers)
     u.uid = user.uid
     print(u)

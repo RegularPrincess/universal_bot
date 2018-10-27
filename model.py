@@ -23,7 +23,7 @@ class QuestMsg(db.Model):
     quest = db.Column(db.UnicodeText, index=True)
     answs = db.Column(db.UnicodeText)
 
-    def __init__(self, quest='', answs='', id=None):
+    def __init__(self, quest='', answs=None, id=None):
         self.id = id
         self.quest = quest
         self.answs = answs
