@@ -89,6 +89,26 @@ class ThreadSubs(Thread):
         vk.send_message_doc(self.uid, cnst.MSG_SUBS, vk_doc_link)
 
 
+class ThreadDropUserAfterTime(Thread):
+    def __init__(self, redy_to_enroll):
+        """Инициализация потока"""
+        Thread.__init__(self)
+        self.redy_to_enroll = redy_to_enroll
+
+    def run(self):
+        print('run\n')
+        while True:
+            keys_to_remove = []
+            for key in self.redy_to_enroll.keys():
+                print(key)
+                self.redy_to_enroll[key].minut_to_drop -= 1
+                if self.redy_to_enroll[key].minut_to_drop <= 0:
+                    keys_to_remove.append(key)
+            for k in keys_to_remove:
+                del self.redy_to_enroll[k]
+            time.sleep(60)
+
+
 def send_message(uid, msg, msgr=cnst.VK):
     # keyboard - list buttons
     if msgr == cnst.VK:

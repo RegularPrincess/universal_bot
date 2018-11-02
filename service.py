@@ -19,6 +19,8 @@ thread_manager = mt.ThreadManager()
 TIMEOUT_THREADS = {}
 
 thread_manager.run_brdcst_shedule()
+d = mt.ThreadDropUserAfterTime(READY_TO_ENROLL)
+d.start()
 # utils.send_message_admins_after_restart()
 
 
@@ -79,7 +81,7 @@ def admin_message_processing(uid, text, link=None):
 
     elif text == cnst.BTN_EDIT_LAST_MSG:
         IN_ADMIN_PANEL[uid] = cnst.BTN_EDIT_LAST_MSG
-        msg = db.get_first_msg()
+        msg = db.get_last_msg()
         msg += "\n\n Отправьте новое завершающее сообщение для замены."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
@@ -228,6 +230,7 @@ def message_processing(uid, text, source, link=None):
 
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
+        READY_TO_ENROLL[uid].minut_to_drop = 29
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
                 index = int(text) - 1
@@ -372,6 +375,7 @@ admins_to_admin_menu()
 
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
+# time.sleep(4)
 # message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)

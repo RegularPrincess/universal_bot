@@ -87,3 +87,4 @@ class EnrollObj:
         self.last_variants = None
         self.need_birthday = need_birthday
         self.skip_next_answ = False
+        self.minut_to_drop = 29
