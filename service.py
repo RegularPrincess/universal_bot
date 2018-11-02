@@ -376,7 +376,7 @@ admins_to_admin_menu()
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
 # time.sleep(4)
-# message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
 #
