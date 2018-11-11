@@ -14,9 +14,9 @@ bot_configuration = BotConfiguration(
     avatar='http://viber.com/avatar.jpg',
     auth_token='489dfb600267d384-f945b37ddf43e01c-450da3b3f85de11a'
 )
-viber = Api(bot_configuration)
-res = viber.set_webhook('https://8922388106.com/test/incoming')
-print(res)
+# viber = Api(bot_configuration)
+# res = viber.set_webhook('https://8922388106.com/test/incoming')
+# print(res)
 
 
 def parse_request(request):
