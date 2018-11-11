@@ -70,7 +70,7 @@ viber = Api(bot_configuration)
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
 def viber():
-    if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
+    if not viber.verify_signature(request.get_data().decode('utf-8'), request.headers.get('X-Viber-Content-Signature')):
         print(request.get_data())
         print('Неудачная попытка установить вебхук')
         return Response(status=403)
