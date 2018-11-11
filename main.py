@@ -51,22 +51,26 @@ import consts as cnst
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
 def viber():
-    if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
-        print(request.get_data())
-        print('Неудачная попытка установить вебхук')
-        return Response(status=403)
+    # if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
+    #     print(request.get_data())
+    #     print('Неудачная попытка установить вебхук')
+    #     return Response(status=403)
     # this library supplies a simple way to receive a request object
     viber_request = viber.parse_request(request.get_data())
     # if viber_request.event_type == EventType.CONVERSATION_STARTED:
     #     pass
     if isinstance(viber_request, ViberMessageRequest):
         message = viber_request.message
+        print(message)
         text = message.text
+        print(text)
         uid = viber_request.sender.id
+        print(uid)
         s.message_processing(uid, text, cnst.VIBER)
     elif isinstance(viber_request, ViberConversationStartedRequest):
         # Запрашивать номер телефона
         uid = viber_request.get_user().get_id()
+        print(uid)
         viber.send_messages(uid, [
             TextMessage(text="Welcome!")
         ])

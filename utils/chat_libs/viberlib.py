@@ -15,8 +15,8 @@ bot_configuration = BotConfiguration(
     auth_token='489dfb600267d384-f945b37ddf43e01c-450da3b3f85de11a'
 )
 viber = Api(bot_configuration)
-# res = viber.set_webhook('https://89.223.88.106/incoming')
-# print(res)
+res = viber.set_webhook('https://8922388106.com/test/incoming')
+print(res)
 
 
 def parse_request(request):
@@ -78,3 +78,4 @@ _btn = {
         "TextOpacity": 60,
         "TextSize": "regular"
         }
+# /var/www/html;
