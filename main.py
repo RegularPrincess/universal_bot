@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from viberbot import Api
+from viberbot.api.bot_configuration import BotConfiguration
+from viberbot.api.messages import VideoMessage
+from viberbot.api.messages.text_message import TextMessage
+import logging
+
+from viberbot.api.viber_requests import ViberConversationStartedRequest
+from viberbot.api.viber_requests import ViberFailedRequest
+from viberbot.api.viber_requests import ViberMessageRequest
+from viberbot.api.viber_requests import ViberSubscribedRequest
+from viberbot.api.viber_requests import ViberUnsubscribedRequest
+
 from flask import Flask, Response
 from flask import json
 from flask import request
@@ -48,13 +60,20 @@ import consts as cnst
 #     uid = message.from_user.id
 #     text = message.text
 
+bot_configuration = BotConfiguration(
+    name='Халва Бета',
+    avatar='http://viber.com/avatar.jpg',
+    auth_token='489dfb600267d384-f945b37ddf43e01c-450da3b3f85de11a'
+)
+viber = Api(bot_configuration)
+
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
 def viber():
-    # if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
-    #     print(request.get_data())
-    #     print('Неудачная попытка установить вебхук')
-    #     return Response(status=403)
+    if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
+        print(request.get_data())
+        print('Неудачная попытка установить вебхук')
+        return Response(status=403)
     # this library supplies a simple way to receive a request object
     viber_request = viber.parse_request(request.get_data())
     # if viber_request.event_type == EventType.CONVERSATION_STARTED:
