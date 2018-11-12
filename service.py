@@ -33,6 +33,7 @@ def admin_message_processing(uid, text, link=None):
     elif text == cnst.BTN_SUBS:
         pg = mt.ThreadSubs(uid)
         pg.start()
+        mt.send_message(uid, "Это потребовать некоторого времени...")
 
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS
@@ -365,6 +366,9 @@ def admins_to_admin_menu():
 admins_to_admin_menu()
 # IN_ADMIN_PANEL['259056624'] = cnst.BTN_BROADCAST_BY_FILE
 
+# pg = mt.ThreadSubs('259056624')
+# pg.start()
+
 # message_processing('259056624', '', cnst.VK, link='https://vk.com/doc259056624_478912520?hash=207dee4cb744dbf03d&dl=GI2TSMBVGY3DENA:1540288896:debfd5a95c7d878fc4&api=1&no_preview=1')
 
 # message_processing('259056624', 'del 79991577222', cnst.VK)
@@ -376,7 +380,7 @@ admins_to_admin_menu()
 #
 # message_processing('259056624', 'whatsapp 79991577222', cnst.VK)
 # time.sleep(4)
-message_processing('79991577222', '3r56g', cnst.WHATSAPP)
+# message_processing('79991577222', '3r56g', cnst.WHATSAPP)
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
 #
