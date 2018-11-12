@@ -33,7 +33,7 @@ def admin_message_processing(uid, text, link=None):
     elif text == cnst.BTN_SUBS:
         pg = mt.ThreadSubs(uid)
         pg.start()
-        mt.send_message(uid, "Это потребовать некоторого времени...")
+        mt.send_message(uid, cnst.MSG_PLEASE_STAND_BY)
 
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS

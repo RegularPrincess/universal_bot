@@ -143,7 +143,9 @@ def make_subs_file(uid):
     i = 0
     for x in users:
         i += 1
-        if isint(x.answers.split(';')[0]) and isint(x.answers.split(';')[1]):
+        if len(x.answers.split(';')) < 2:
+            date = 'None'
+        elif isint(x.answers.split(';')[0]) and isint(x.answers.split(';')[1]):
             date = '{}.{}'.format(int(x.answers.split(';')[1]), int(x.answers.split(';')[0]))
         else:
             date = 'None'
