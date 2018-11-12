@@ -69,13 +69,13 @@ viber = Api(bot_configuration)
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
-def viber():
-    if not viber.verify_signature(request.get_data().decode('utf-8'), request.headers.get('X-Viber-Content-Signature')):
+def viberf():
+    if not viber.verify_signature(request.get_data(), request.headers.get('X-Viber-Content-Signature')):
         print(request.get_data())
         print('Неудачная попытка установить вебхук')
         return Response(status=403)
     # this library supplies a simple way to receive a request object
-    viber_request = viber.parse_request(request.get_data())
+    viber_request = viber.parse_request(request.get_data().decode('utf-8'))
     # if viber_request.event_type == EventType.CONVERSATION_STARTED:
     #     pass
     if isinstance(viber_request, ViberMessageRequest):
