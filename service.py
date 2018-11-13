@@ -100,7 +100,7 @@ def admin_message_processing(uid, text, link=None):
     elif 'whatsapp' in text:
         num = text.split(' ')[1]
         if num[0] == '7' and len(num) == 11:
-            start_conwersation(num)
+            start_conwersation_wapp(num)
             mt.send_message(uid, 'Сообщение отправлено через whatsapp')
         else:
             mt.send_message(uid, 'Не верный формат. Необходимо:whatsapp 79999999999')
@@ -223,11 +223,19 @@ def message_processing(uid, text, source, link=None):
         admin_message_processing(uid, text, link=link)
         return 'ok'
 
-    elif uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
-        start_conwersation(uid, welcome_only=True)
+    if uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
+        start_conwersation_wapp(uid, welcome_only=True)
+
+    if uid not in READY_TO_ENROLL and source == cnst.VIBER:
+        quests = copy.deepcopy(db.get_all_quests())
+        user = m.EnrollInfo(number=None, uid=uid, msgr=cnst.VIBER)
+        READY_TO_ENROLL[uid] = m.EnrollObj(m.EnrollInfo(
+            user.number, user.uid, user.id, '', user.msgr), quests)
+        msg = db.get_first_msg()
+        mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
 
     # Обработка ввода данных пользователя
-    elif uid in READY_TO_ENROLL:
+    if uid in READY_TO_ENROLL:
         # блок для ватсапп, где нет кнопок и варианты цифрами
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
@@ -270,22 +278,15 @@ def not_ready_to_enroll(uid):
     return uid not in READY_TO_ENROLL
 
 
-def start_conwersation(number, welcome_only=False):
-    new = db.is_new_user(number)
+def start_conwersation_wapp(number, welcome_only=False):
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
     mt.send_message(number, msg, cnst.WHATSAPP)
     time.sleep(1)
     quests = copy.deepcopy(db.get_all_quests())
-    if not new:
-        quests = quests[2:]
-    else:
-        db.add_any(user)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
-    if welcome_only:
-        READY_TO_ENROLL[number].skip_next_answ = True
-        return
+        user.number, user.uid, user.id, '', user.msgr), quests)
+
     if len(quests) > 0:
         q = quests.pop(0)
         msg = q.quest
@@ -306,7 +307,7 @@ def send_msg_by_file(text, link):
     with open("subs_num.txt") as file:
         array = [row.strip() for row in file]
         for num in array:
-            start_conwersation(num, welcome_only=True)
+            start_conwersation_wapp(num, welcome_only=True)
 
 
 def admins_to_admin_menu():
