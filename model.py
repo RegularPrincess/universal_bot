@@ -69,7 +69,7 @@ class EnrollInfo(db.Model):
     answers = db.Column(db.TEXT)
     msgr = db.Column(db.INTEGER)
 
-    def __init__(self, number, uid=None, id=None, answers='', msgr=None):
+    def __init__(self, number, uid=None, id=None, answers=[], msgr=None):
         self.id = id
         self.uid = uid
         self.number = number

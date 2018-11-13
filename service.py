@@ -230,8 +230,9 @@ def message_processing(uid, text, source, link=None):
         quests = copy.deepcopy(db.get_all_quests())
         user = m.EnrollInfo(number=None, uid=uid, msgr=cnst.VIBER)
         READY_TO_ENROLL[uid] = m.EnrollObj(m.EnrollInfo(
-            user.number, user.uid, user.id, '', user.msgr), quests)
+            user.number, user.uid, user.id, [], user.msgr), quests)
         msg = db.get_first_msg()
+        print(msg)
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
 
     # Обработка ввода данных пользователя

@@ -112,7 +112,11 @@ class SendMsg(Thread):
             else:
                 wapp.send_message_keyboard(self.uid, self.msg, self.answs)
         elif self.msgr == cnst.VIBER:
-            pass
+            if self.answs is None:
+                viber.send_message(self.uid, self.msg)
+            else:
+                pass
+                # viber.send_message_keyboard(self.uid, self.msg, self.answs)
 
 
 def send_message_keyboard(uid, msg, keyboard, msgr=cnst.VK):
