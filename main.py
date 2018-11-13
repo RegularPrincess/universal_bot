@@ -85,7 +85,10 @@ def viberf():
         print(text)
         uid = viber_request.sender.id
         print(uid)
-        s.message_processing(uid, text, cnst.VIBER)
+        viber.send_messages(uid, [
+            TextMessage(text="Welcome!")
+        ])
+        # s.message_processing(uid, text, cnst.VIBER)
     elif isinstance(viber_request, ViberConversationStartedRequest):
         # Запрашивать номер телефона
         uid = viber_request.get_user().get_id()

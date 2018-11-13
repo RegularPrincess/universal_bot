@@ -18,7 +18,7 @@ def send_message(user_id, text):
         "body": text
     }
     print(payload)
-    'showMessagesQueue'
+    # 'showMessagesQueue'
     url = 'https://eu21.chat-api.com/instance13769/message?token=8xfrmb4v0c29qea2'
     response = requests.post(url, data=payload)
     print(response)
