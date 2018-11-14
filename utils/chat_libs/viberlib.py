@@ -27,7 +27,7 @@ def parse_request(request):
 
 
 def send_message(uid, text):
-    text_message = TextMessage(text)
+    text_message = TextMessage(text=text)
     viber.send_messages(uid, [text_message])
 
 
@@ -55,7 +55,7 @@ def get_keyboard_from_list(list_btn):
 def send_message_keyboard(uid, text, keyboard):
     k = get_keyboard_from_list(keyboard)
     msg = KeyboardMessage(keyboard=k)
-    text_mse = TextMessage(text)
+    text_mse = TextMessage(text=text)
     viber.send_messages(to=uid, messages=[text_mse, msg])
 
 
