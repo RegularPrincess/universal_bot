@@ -254,6 +254,7 @@ def message_processing(uid, text, source, link=None):
             READY_TO_ENROLL[uid].last_variants = q.answs
             mt.send_quest(uid, q, msgr=READY_TO_ENROLL[uid].ei.msgr)
         else:
+            print('sending last msg by ' + text + '\n')
             mt.send_last_msge(uid, READY_TO_ENROLL[uid].ei.msgr)
             db.update_user(uid, READY_TO_ENROLL[uid].ei)
             del READY_TO_ENROLL[uid]

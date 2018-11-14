@@ -100,19 +100,20 @@ class SendMsg(Thread):
 
     def run(self):
         if self.msgr == cnst.VK:
-            if self.answs is None:
+            if self.answs is None or self.answs == '':
                 vk.send_message(self.uid, self.msg)
             else:
                 vk.send_message_keyboard(self.uid, self.msg, self.answs)
         elif self.msgr == cnst.WHATSAPP:
-            if self.answs is None:
+            if self.answs is None or self.answs == '':
                 wapp.send_message(self.uid, self.msg)
             else:
                 wapp.send_message_keyboard(self.uid, self.msg, self.answs)
         elif self.msgr == cnst.VIBER:
-            if self.answs is None:
+            if self.answs is None or self.answs == '':
                 vib.send_message(self.uid, self.msg)
             else:
+                print('answs: ' + self.answs + '\n')
                 vib.send_message_keyboard(self.uid, self.msg, self.answs)
 
 
@@ -146,8 +147,6 @@ def send_msg_to_admins(info):
 def send_quest(uid, quest, msgr):
     s = SendMsg(uid, quest.quest, quest.answs, msgr)
     s.start()
-
-
 
 
 def _send_msg_all_whatsapp_subs(msg):
