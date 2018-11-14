@@ -229,14 +229,20 @@ def message_processing(uid, text, source, link=None):
     if uid not in READY_TO_ENROLL and source == cnst.VIBER:
         quests = copy.deepcopy(db.get_all_quests())
         user = m.EnrollInfo(number=None, uid=uid, msgr=cnst.VIBER)
-        READY_TO_ENROLL[uid] = m.EnrollObj(m.EnrollInfo(
-            user.number, user.uid, user.id, [], user.msgr), quests)
+        READY_TO_ENROLL[uid] = m.EnrollObj(enroll_info=m.EnrollInfo(
+            user.number, user.uid, user.id, [], user.msgr), quests=quests)
         msg = db.get_first_msg()
         print(msg)
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
+        time.sleep(1)
+        mt.send_message(uid, 'Введите номер', msgr=cnst.VIBER)
+        return 'ok'
 
     # Обработка ввода данных пользователя
     if uid in READY_TO_ENROLL:
+        if source == cnst.VIBER and READY_TO_ENROLL[uid].ei.number is None:
+            READY_TO_ENROLL[uid].ei.number = text
+
         # блок для ватсапп, где нет кнопок и варианты цифрами
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
