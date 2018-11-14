@@ -4,14 +4,11 @@ from threading import Thread
 
 from datetime import datetime, timedelta
 
-import requests
-from viberbot.api.messages import TextMessage
-
 from utils import db_utils as db
 import consts as cnst
 import utils.chat_libs.vklib as vk
 import utils.chat_libs.whatsapplib as wapp
-import utils.chat_libs.viberlib as viber
+import utils.chat_libs.viberlib as vib
 import utils.service_utils as utils
 import model as m
 
@@ -114,12 +111,9 @@ class SendMsg(Thread):
                 wapp.send_message_keyboard(self.uid, self.msg, self.answs)
         elif self.msgr == cnst.VIBER:
             if self.answs is None:
-                viber.send_message(self.uid, [
-                    TextMessage(text=self.msg)
-                ])
+                vib.send_message(self.uid, self.msg)
             else:
-                pass
-                # viber.send_message_keyboard(self.uid, self.msg, self.answs)
+                vib.send_message_keyboard(self.uid, self.msg, self.answs)
 
 
 def send_message_keyboard(uid, msg, keyboard, msgr=cnst.VK):

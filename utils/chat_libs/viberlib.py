@@ -6,15 +6,14 @@ from viberbot.api.messages import (
 )
 import copy
 
-
-
-
 bot_configuration = BotConfiguration(
     name='Халва Бета',
     avatar='http://viber.com/avatar.jpg',
     auth_token='489dfb600267d384-f945b37ddf43e01c-450da3b3f85de11a'
 )
 viber = Api(bot_configuration)
+
+
 # res = viber.set_webhook('https://8922388106.com/test/incoming')
 # print(res)
 
@@ -34,48 +33,44 @@ def send_message(uid, text):
 
 def get_keyboard_from_list(list_btn):
     keyboard = copy.deepcopy(_keyboard)
+    column = 1
+    row = 1
     for b in list_btn:
         new_btn = copy.deepcopy(_btn)
         new_btn['ActionBody'] = b
         new_btn['Text'] = b
-        keyboard['keyboard']['Buttons'].append(new_btn)
+        new_btn["Columns"] = column
+        new_btn['Rows'] = row
+        keyboard['Buttons'].append(new_btn)
+        if column == 6 and row == 2:
+            return keyboard
+        if column < 6:
+            column += 1
+        else:
+            column = 1
+            row = 2
     return keyboard
 
 
 def send_message_keyboard(uid, text, keyboard):
-    send_message(uid, text)
     k = get_keyboard_from_list(keyboard)
     msg = KeyboardMessage(keyboard=k)
-    viber.send_messages(to=uid, messages=[msg])
+    text_mse = TextMessage(text)
+    viber.send_messages(to=uid, messages=[text_mse, msg])
 
 
 _keyboard = {
-    "keyboard": {
-        "DefaultHeight": True,
-        "BgColor": "#FFFFFF",
-        "Buttons": []
-    }
+    "Type": "keyboard",
+    "DefaultHeight": True,
+    "Buttons": []
 }
 
 _btn = {
-        "Columns": 6,
-        "Rows": 1,
-        "BgColor": "#2db9b9",
-        "BgMediaType": "gif",
-        "BgMedia": "http://www.url.by/test.gif",
-        "BgLoop": True,
-        "ActionType": "reply",
-        "OpenURLType": "internal",
-        "InternalBrowser": {
-            "Mode": "fullscreen",
-            "CustomTitle": ""
-        },
-        "ActionBody": "",
-        "Image": "",
-        "Text": "",
-        "TextVAlign": "middle",
-        "TextHAlign": "center",
-        "TextOpacity": 60,
-        "TextSize": "regular"
-        }
+    "ActionType": "reply",
+    "ActionBody": "",
+    "Text": "",
+    "TextSize": "regular",
+    "Columns": 1,
+    "Rows": 1
 # /var/www/html;
+}
