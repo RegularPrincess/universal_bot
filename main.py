@@ -32,8 +32,6 @@ secret_key = config.secret_key
 db_name = config.db_name
 bot_name = config.bot_name
 vk_api_url = config.vk_api_url
-bot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, db_name)
@@ -66,6 +64,16 @@ bot_configuration = BotConfiguration(
     auth_token='489dfb600267d384-f945b37ddf43e01c-450da3b3f85de11a'
 )
 viber = Api(bot_configuration)
+
+tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
+
+
+@tgbot.message_handler(content_types=["text"])
+def handle_text(message):
+    uid = message.from_user.id
+    text = message.text
+    print("\nTG uid" + uid)
+    print("\nTG msg" + text)
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
