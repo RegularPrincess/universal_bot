@@ -235,7 +235,7 @@ def message_processing(uid, text, source, link=None):
         print(msg)
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
         time.sleep(1)
-        mt.request_user_number_viber (uid, 'Нам необходим ваш номер телефона')
+        mt.request_user_number_viber(uid, 'Нам необходим ваш номер телефона')
         return 'ok'
 
     # Обработка ввода данных пользователя

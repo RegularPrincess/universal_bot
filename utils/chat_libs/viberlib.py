@@ -87,8 +87,8 @@ _keyboard_request_number = {
     "Buttons":
         [
             {
-                "ActionType": "share-phone",
-                "ActionBody": "reply",
+                "ActionType": "reply",
+                "ActionBody": "share-phone",
                 "Text": "Отправить номер телефона",
                 "TextSize": "regular",
                 "Columns": 1,
