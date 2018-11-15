@@ -26,7 +26,7 @@ def invite_to_chanell(number):
     print(result)
 
 
-invite_to_chanell('+79061138436')
+# invite_to_chanell('+79061138436')
 #
 # import telebot
 # import telebot.types as types
