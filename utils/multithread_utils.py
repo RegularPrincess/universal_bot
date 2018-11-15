@@ -117,6 +117,17 @@ class SendMsg(Thread):
                 vib.send_message_keyboard(self.uid, self.msg, self.answs)
 
 
+class RequestNumberViber(Thread):
+    def __init__(self, uid, msg):
+        """answs - list of answers"""
+        Thread.__init__(self)
+        self.uid = uid
+        self.msg = msg
+
+    def run(self):
+        vib.send_message_request_number(self.uid, self.msg)
+
+
 def send_message_keyboard(uid, msg, keyboard, msgr=cnst.VK):
     s = SendMsg(uid, msg, keyboard, msgr)
     s.start()
@@ -162,4 +173,9 @@ def send_msg_all_whatsapp_subs(msg):
 
 def send_keyboard_vk_message(uid, msg, keyboard):
     p = Process(target=vk.send_message_keyboard, args=(uid, msg, keyboard))
+    p.start()
+
+
+def request_user_number_viber(uid, text):
+    p = RequestNumberViber(uid, text)
     p.start()

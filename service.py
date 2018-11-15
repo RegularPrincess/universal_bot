@@ -235,17 +235,19 @@ def message_processing(uid, text, source, link=None):
         print(msg)
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
         time.sleep(1)
-        mt.send_message(uid, 'Введите номер', msgr=cnst.VIBER)
-
-
+        mt.RequestNumberViber(uid, 'Нам необходим ваш номер телефона')
         return 'ok'
 
     # Обработка ввода данных пользователя
     if uid in READY_TO_ENROLL:
 
-        # Блок для viber где нельзя получить номер
+        # Блок для viber, где нельзя получить номер
         if source == cnst.VIBER and READY_TO_ENROLL[uid].ei.number is None:
-            READY_TO_ENROLL[uid].ei.number = text
+            if utils.is_number_valid(text):
+                READY_TO_ENROLL[uid].ei.number = text
+            else:
+                mt.send_message(uid, "Поделитесь номером, нажав на кнопку, пожалуйста.")
+                return 'ok'
 
         # блок для ватсапп, где нет кнопок и варианты цифрами
         if source == cnst.WHATSAPP and READY_TO_ENROLL[uid].last_variants is not None:
