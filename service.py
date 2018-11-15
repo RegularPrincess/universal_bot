@@ -11,6 +11,7 @@ import time
 import copy
 from utils import db_utils as db
 from utils import service_utils as utils
+import utils.chat_libs.tglib
 
 READY_TO_ENROLL = {}
 IN_ADMIN_PANEL = {}
@@ -268,7 +269,7 @@ def message_processing(uid, text, source, link=None):
         else:
             print('sending last msg by ' + text + '\n')
             mt.send_last_msge(uid, READY_TO_ENROLL[uid].ei.msgr)
-            db.update_user(uid, READY_TO_ENROLL[uid].ei)
+            db.update_user(READY_TO_ENROLL[uid].ei, uid)
             del READY_TO_ENROLL[uid]
 
     # Вход для админа
