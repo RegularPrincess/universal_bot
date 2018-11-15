@@ -42,13 +42,13 @@ def get_keyboard_from_list(list_btn):
         new_btn["Columns"] = column
         new_btn['Rows'] = row
         keyboard['Buttons'].append(new_btn)
-        if column == 6 and row == 2:
+        if row == 6 and column == 2:
             return keyboard
-        if column < 6:
-            column += 1
+        if row < 6:
+            row += 1
         else:
-            column = 1
-            row = 2
+            row = 1
+            column = 2
     return keyboard
 
 
