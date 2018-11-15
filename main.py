@@ -66,6 +66,7 @@ bot_configuration = BotConfiguration(
 viber = Api(bot_configuration)
 
 tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
+tgbot.polling(none_stop=True, interval=1)
 
 
 @tgbot.message_handler(content_types=["text"])
