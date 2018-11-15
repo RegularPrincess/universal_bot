@@ -13,7 +13,7 @@ print(client.get_me().stringify())
 def invite_to_chanell(number):
     contact = InputPhoneContact(client_id=0, phone=number, first_name="ABC", last_name="abc")
 
-    result = client(ImportContactsRequest([contact], replace=True))
+    result = client(ImportContactsRequest([contact]))
     print(result)
     user = client.get_entity(number)
     channel = client.get_entity('autoinvitetest')
