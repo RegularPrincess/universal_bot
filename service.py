@@ -235,7 +235,7 @@ def message_processing(uid, text, source, link=None):
         print(msg)
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
         time.sleep(1)
-        mt.send_message(uid, 'Нам необходим ваш номер телефона')
+        mt.send_message(uid, 'Нам необходим ваш номер телефона', msgr=cnst.VIBER)
         return 'ok'
 
     # Обработка ввода данных пользователя
@@ -246,7 +246,7 @@ def message_processing(uid, text, source, link=None):
             if utils.is_number_valid(text):
                 READY_TO_ENROLL[uid].ei.number = text
             else:
-                mt.send_message(uid, "Поделитесь номером, нажав на кнопку, пожалуйста.")
+                mt.send_message(uid, "Введите, пожалуйста, корректный номер", msgr=READY_TO_ENROLL[uid].ei.msgr)
                 return 'ok'
 
         # блок для ватсапп, где нет кнопок и варианты цифрами
