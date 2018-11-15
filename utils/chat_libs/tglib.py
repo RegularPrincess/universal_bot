@@ -1,5 +1,7 @@
 from telethon import TelegramClient, sync
 from telethon.tl.functions.channels import InviteToChannelRequest
+from telethon.tl.functions.contacts import ImportContactsRequest
+from telethon.tl.types import InputPhoneContact
 
 api_id = 384524
 api_hash = '6fd9e886360d69bc24a8076665cdd496'
@@ -7,15 +9,24 @@ api_hash = '6fd9e886360d69bc24a8076665cdd496'
 client = TelegramClient('MYSESSION228', api_id, api_hash).start()
 print(client.get_me().stringify())
 
-user = client.get_entity('+79991577222')
-channel = client.get_entity('autoinvitetest')
 
-# Add users.
-result = client(InviteToChannelRequest(
-    channel,
-    [user]
-))
-print(result)
+def invite_to_chanell(number):
+    contact = InputPhoneContact(client_id=0, phone=number, first_name="ABC", last_name="abc")
+
+    result = client.invoke(ImportContactsRequest([contact], replace=True))
+    print(result)
+    user = client.get_entity(number)
+    channel = client.get_entity('autoinvitetest')
+
+    # Add users.
+    result = client(InviteToChannelRequest(
+        channel,
+        [user]
+    ))
+    print(result)
+
+
+invite_to_chanell('+79061138436')
 #
 # import telebot
 # import telebot.types as types
