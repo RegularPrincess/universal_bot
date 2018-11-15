@@ -42,13 +42,13 @@ def get_keyboard_from_list(list_btn):
         new_btn["Columns"] = column
         new_btn['Rows'] = row
         keyboard['Buttons'].append(new_btn)
-        if row == 6 and column == 2:
+        if column == 6 and row == 2:
             return keyboard
-        if row < 6:
-            row += 1
+        if column < 6:
+            column += 1
         else:
-            row = 1
-            column = 2
+            column = 1
+            row = 2
     return keyboard
 
 
@@ -75,6 +75,10 @@ _btn = {
     "ActionType": "reply",
     "ActionBody": "",
     "Text": "",
+    'TextShouldFit': 'true',
+    "BgColor": "#2db9b9",
+    "TextVAlign": "middle",
+    "TextHAlign": "center",
     "TextSize": "regular",
     "Columns": 1,
     "Rows": 1
