@@ -236,10 +236,14 @@ def message_processing(uid, text, source, link=None):
         mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
         time.sleep(1)
         mt.send_message(uid, 'Введите номер', msgr=cnst.VIBER)
+
+
         return 'ok'
 
     # Обработка ввода данных пользователя
     if uid in READY_TO_ENROLL:
+
+        # Блок для viber где нельзя получить номер
         if source == cnst.VIBER and READY_TO_ENROLL[uid].ei.number is None:
             READY_TO_ENROLL[uid].ei.number = text
 

@@ -52,8 +52,14 @@ def get_keyboard_from_list(list_btn):
     return keyboard
 
 
+def send_message_request_number(uid, text):
+    msg = KeyboardMessage(keyboard=_keyboard_request_number)
+    text_mse = TextMessage(text=text)
+    viber.send_messages(to=uid, messages=[text_mse, msg])
+
+
 def send_message_keyboard(uid, text, keyboard):
-    k = get_keyboard_from_list(keyboard)
+    k = get_keyboard_from_list(keyboard.split('; '))
     msg = KeyboardMessage(keyboard=k)
     text_mse = TextMessage(text=text)
     viber.send_messages(to=uid, messages=[text_mse, msg])
@@ -72,5 +78,22 @@ _btn = {
     "TextSize": "regular",
     "Columns": 1,
     "Rows": 1
-# /var/www/html;
+    # /var/www/html;
+}
+
+_keyboard_request_number = {
+    "Type": "keyboard",
+    "DefaultHeight": True,
+    "Buttons":
+        [
+            {
+                "ActionType": "share-phone",
+                "ActionBody": "reply",
+                "Text": "Отправить номер телефона",
+                "TextSize": "regular",
+                "Columns": 1,
+                "Rows": 1
+            }
+        ]
+
 }

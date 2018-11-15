@@ -76,6 +76,7 @@ def viberf():
         return Response(status=403)
     # this library supplies a simple way to receive a request object
     viber_request = viber.parse_request(request.get_data().decode('utf-8'))
+    print(viber_request)
     # if viber_request.event_type == EventType.CONVERSATION_STARTED:
     #     pass
     if isinstance(viber_request, ViberMessageRequest):
