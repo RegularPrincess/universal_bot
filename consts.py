@@ -23,6 +23,7 @@ __BTN_ENROLL = "Записаиться на занятие"
 BTN_BROADCASTS = "Меню рассылок"
 BTN_BROADCAST_BY_FILE = "Рассылка номерам из файла"
 BTN_EDIT_LAST_MSG = "Ред-ть последнее сообщение"
+BTN_STOP_BRDCST = "Остановить рассылку"
 
 WHATSAPP = 0
 VK = 1
@@ -287,7 +288,16 @@ KEYBOARD_BROADCASTS = {
                 "label": BTN_CANCEL
             },
             "color": "default"
-        }]
+        },
+            {
+                "action": {
+                    "type": "text",
+                    "payload": "{\"button\": \"1\"}",
+                    "label": BTN_STOP_BRDCST
+                },
+                "color": "default"
+            }
+        ]
     ]
 }
 

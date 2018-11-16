@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from threading import Thread
 
 import requests
 
@@ -11,6 +12,7 @@ import time
 import copy
 from utils import db_utils as db
 from utils import service_utils as utils
+from utils.chat_libs import whatsapplib as wapp
 
 READY_TO_ENROLL = {}
 IN_ADMIN_PANEL = {}
@@ -21,6 +23,8 @@ TIMEOUT_THREADS = {}
 thread_manager.run_brdcst_shedule()
 d = mt.ThreadDropUserAfterTime(READY_TO_ENROLL)
 d.start()
+
+
 # utils.send_message_admins_after_restart()
 
 
@@ -58,6 +62,10 @@ def admin_message_processing(uid, text, link=None):
     elif text == cnst.BTN_ADD_BROADCAST_BY_TIME:
         IN_ADMIN_PANEL[uid] = m.BcstByTime()
         mt.send_keyboard_vk_message(uid, cnst.MSG_ADD_BRDCST_BY_TIME, cnst.KEYBOARD_CANCEL)
+
+    elif text == cnst.BTN_STOP_BRDCST:
+        msg = wapp.stop_broadcasting()
+        mt.send_message(uid, msg)
 
     elif text == cnst.BTN_BROADCAST_BY_TIME:
         IN_ADMIN_PANEL[uid] = cnst.BTN_BROADCAST_BY_TIME
@@ -221,7 +229,6 @@ def admin_message_processing(uid, text, link=None):
 
 
 def message_processing(uid, text, source, link=None):
-
     if db.is_admin(str(uid)):
         admin_message_processing(uid, text, link=link)
         return 'ok'
@@ -274,7 +281,7 @@ def message_processing(uid, text, source, link=None):
             try:
                 answs = READY_TO_ENROLL[uid].ei.answers.split('; ')
                 if datetime.today().month > int(answs[1]) and \
-                    datetime.today().day > int(answs[0]):
+                                datetime.today().day > int(answs[0]):
                     y = str(datetime.today().year + 1)
                 else:
                     y = str(datetime.today().year + 1)
@@ -347,21 +354,32 @@ def start_conwersation(number, welcome_only=False):
             mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
-def send_msg_by_file(text, link):   
-    r = requests.get(link, allow_redirects=True)
-    file = open('subs_num.txt', 'wb')
-    file.write(r.content)
-    file.close()
-    with open("subs_num.txt") as file:
-        array = [row.strip() for row in file]
-        for num in array:
-            start_conwersation(num, welcome_only=True)
+def send_msg_by_file(text, link):
+    class SendByFile(Thread):
+        def __init__(self, text, link):
+            Thread.__init__(self)
+            self.text = text
+            self.link = link
+
+        def run(self):
+            r = requests.get(self.link, allow_redirects=True)
+            file = open('subs_num.txt', 'wb')
+            file.write(r.content)
+            file.close()
+            with open("subs_num.txt") as file:
+                array = [row.strip() for row in file]
+                for num in array:
+                    start_conwersation(num, welcome_only=True)
+
+    s = SendByFile(text, link)
+    s.start()
 
 
 def admins_to_admin_menu():
     admins = db.get_all_admins()
     for a in admins:
         IN_ADMIN_PANEL[a.uid] = ''
+
 
 admins_to_admin_menu()
 # IN_ADMIN_PANEL['259056624'] = cnst.BTN_BROADCAST_BY_FILE
@@ -384,6 +402,3 @@ admins_to_admin_menu()
 # message_processing('79991577222', '222222', cnst.WHATSAPP)
 # message_processing('79991577222', '2', cnst.WHATSAPP)
 #
-
-
-

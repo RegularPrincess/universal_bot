@@ -63,6 +63,15 @@ def get_keyboard_from_list(list_btns):
         k += str(i) + ' - ' + b + '\n'
         i += 1
     return k
+
+
+def stop_broadcasting():
+    url = 'https://eu21.chat-api.com/instance13769/clearMessagesQueue?token=8xfrmb4v0c29qea2'
+    response = requests.get(url)
+    print(response)
+    print(response.text)
+    data = json.loads(response.text)
+    return data['message']
 #
 # def send_message_much(user_ids, text):
 #     """
