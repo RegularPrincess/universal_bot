@@ -47,7 +47,8 @@ def send_message_admins(info):
 
 def send_text_message_admins(msg):
     admins = db.get_all_admins()
-    vk.send_message_much(admins, msg)
+    uids = [a.uid for a in admins]
+    vk.send_message_much(uids, msg)
 
 
 def del_subs_by_file(link):

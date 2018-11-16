@@ -401,7 +401,7 @@ admins_to_admin_menu()
 
 # mt.del_subs_by_file('https://vk.com/doc259056624_481462249?hash=631749f9c5ea0ce5f6&dl=61e14654f660532a49')
 # IN_ADMIN_PANEL['259056624'] = cnst.BTN_BROADCAST_BY_FILE
-mt.send_keyboard_vk_message('259056624', "Удалено", cnst.KEYBOARD_ADMIN)
+# mt.send_keyboard_vk_message('259056624', "Удалено", cnst.KEYBOARD_ADMIN)
 
 
 # pg = mt.ThreadSubs('259056624')
