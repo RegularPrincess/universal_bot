@@ -25,7 +25,7 @@ BTN_BROADCAST_BY_FILE = "Рассылка номерам из файла"
 BTN_EDIT_LAST_MSG = "Ред-ть последнее сообщение"
 BTN_STOP_BRDCST = "Остановить рассылку"
 BTN_SUBS_DEL = "Удаление подписчиков"
-BTN_FIRST_MSG_ANSWS_EDIT = 'Ред-ть вар-ты ответов к приветственному сообщению'
+BTN_FIRST_MSG_ANSWS_EDIT = 'Ред-ть вар-ты приветственного'
 
 
 WHATSAPP = 0
