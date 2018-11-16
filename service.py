@@ -95,7 +95,9 @@ def admin_message_processing(uid, text, link=None):
     elif text == cnst.BTN_FIRST_MSG_ANSWS_EDIT:
         IN_ADMIN_PANEL[uid] = cnst.BTN_FIRST_MSG_ANSWS_EDIT
         msg = db.get_first_msg_answs()
-        msg += "\n\n Отправьте новые варианты ответов для замены через запятую или отправте 0 для удаления."
+        if msg == '':
+            msg = '<Вариантов нет>\n'
+        msg += "\n\n Отправьте новые варианты ответов для замены через точку с запятой или отправте 0 для удаления."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
     elif text == cnst.BTN_EDIT_LAST_MSG:
