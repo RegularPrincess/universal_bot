@@ -245,7 +245,7 @@ def message_processing(uid, text, source, link=None):
     elif text == '#':
         db.delete_user_by_num(uid)
         utils.del_uid_from_dict(uid, READY_TO_ENROLL)
-        mt.send_msg_to_admins('Пользователь с номером {} отписался от рассылок и сообщений'
+        mt.send_text_msg_to_admins('Пользователь с номером {} отписался от рассылок и сообщений'
                               .format(uid))
         return 'ok'
 

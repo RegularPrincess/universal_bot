@@ -133,7 +133,7 @@ def del_subs_by_file(link):
     s.start()
 
 
-def send_msg_to_admins(text):
+def send_text_msg_to_admins(text):
     s = ThreadBrdcstToAdmins(text)
     s.start()
 
@@ -169,6 +169,7 @@ def send_keyboard_vk_message(uid, msg, keyboard):
 def send_msg_all_whatsapp_subs(msg):
     p = Process(target=_send_msg_all_whatsapp_subs, args=(msg,))
     p.start()
+
 
 def send_msg_welcome(uid, out=cnst.WHATSAPP):
 
