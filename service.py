@@ -39,6 +39,10 @@ def admin_message_processing(uid, text, link=None):
         pg.start()
         mt.send_message(uid, cnst.MSG_PLEASE_STAND_BY)
 
+    elif text == cnst.BTN_SUBS_DEL:
+        IN_ADMIN_PANEL[uid] = cnst.BTN_SUBS_DEL
+        mt.send_keyboard_vk_message(uid, cnst.MSG_ACCEPT_FILE_FOR_SUBS_DEL, cnst.KEYBOARD_CANCEL)
+
     elif text == cnst.BTN_ADMINS:
         IN_ADMIN_PANEL[uid] = cnst.BTN_ADMINS
         admins = db.get_all_admins()
@@ -177,6 +181,11 @@ def admin_message_processing(uid, text, link=None):
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, "Разослано", cnst.KEYBOARD_ADMIN)
 
+    elif IN_ADMIN_PANEL[uid] == cnst.BTN_SUBS_DEL:
+        mt.del_subs_by_file(link)
+        IN_ADMIN_PANEL[uid] = ''
+        mt.send_keyboard_vk_message(uid, "Удалено", cnst.KEYBOARD_ADMIN)
+
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
         mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
@@ -232,6 +241,12 @@ def message_processing(uid, text, source, link=None):
     if db.is_admin(str(uid)):
         admin_message_processing(uid, text, link=link)
         return 'ok'
+
+    elif text == '#':
+        db.delete_user_by_num(uid)
+        utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+        mt.send_msg_to_admins('Пользователь с номером {} отписался от рассылок и сообщений'
+                              .format(uid))
 
     elif uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
         start_conwersation(uid, welcome_only=True)

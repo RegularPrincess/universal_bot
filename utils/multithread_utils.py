@@ -110,6 +110,33 @@ class ThreadDropUserAfterTime(Thread):
             time.sleep(60)
 
 
+class ThreadBrdcstToAdmins(Thread):
+    def __init__(self, text):
+        Thread.__init__(self)
+        self.text = text
+
+    def run(self):
+        utils.send_text_message_admins(self.text)
+
+
+class ThreadDelSubsByFile(Thread):
+    def __init__(self, link):
+        Thread.__init__(self)
+        self.link = link
+
+    def run(self):
+        utils.del_subs_by_file(self.link)
+
+
+def del_subs_by_file(link):
+    s = ThreadDelSubsByFile(link)
+    s.start()
+
+
+def send_msg_to_admins(text):
+    s = ThreadBrdcstToAdmins(text)
+    s.start()
+
 def send_message(uid, msg, msgr=cnst.VK):
     # keyboard - list buttons
     if msgr == cnst.VK:

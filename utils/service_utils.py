@@ -45,9 +45,20 @@ def send_message_admins(info):
     vk.send_message_much(uids, cnst.NOTIFY_ADMIN.format(info.uid, note))
 
 
-def send_message_admins_after_restart():
+def send_text_message_admins(msg):
     admins = db.get_all_admins()
-    # vk.send_message_much_keyboard(admins, cnst.MSG_SERVER_RESTARTED, get_user_keyboard())
+    vk.send_message_much(admins, msg)
+
+
+def del_subs_by_file(link):
+    r = requests.get(link, allow_redirects=True)
+    file = open('subs_num.txt', 'wb')
+    file.write(r.content)
+    file.close()
+    with open("subs_num.txt") as file:
+        array = [row.strip() for row in file]
+        for num in array:
+            db.delete_user_by_num(num)
 
 
 def is_number_valid(number):
