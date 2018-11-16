@@ -25,6 +25,8 @@ BTN_BROADCAST_BY_FILE = "Рассылка номерам из файла"
 BTN_EDIT_LAST_MSG = "Ред-ть последнее сообщение"
 BTN_STOP_BRDCST = "Остановить рассылку"
 BTN_SUBS_DEL = "Удаление подписчиков"
+BTN_FIRST_MSG_ANSWS_EDIT = 'Ред-ть вар-ты ответов к приветственному сообщению'
+
 
 WHATSAPP = 0
 VK = 1
@@ -193,6 +195,16 @@ KEYBOARD_CANCEL_AND_MSG_EDIT = {
             },
             "color": "default"
         },
+            {
+                "action": {
+                    "type": "text",
+                    "payload": "{\"button\": \"1\"}",
+                    "label": BTN_FIRST_MSG_ANSWS_EDIT
+                },
+                "color": "default"
+            }
+        ],
+        [
             {
                 "action": {
                     "type": "text",

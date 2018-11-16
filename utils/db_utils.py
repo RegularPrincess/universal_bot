@@ -38,6 +38,15 @@ def get_first_msg():
     return q.all()[0].first_msg
 
 
+def get_first_msg_answs():
+    q = db.session.query(m.Msgs)
+    answs = q.all()[0].first_msg_answs
+    if answs is not None and len(answs) > 3:
+        return answs
+    else:
+        return ''
+
+
 def get_congrat_msg():
     q = db.session.query(m.Msgs)
     return q.all()[0].congrat_msg
@@ -75,6 +84,12 @@ def delete_brdcst(id):
 def update_first_msg(text):
     msg = db.session.query(m.Msgs)
     msg[0].first_msg = text
+    session.commit()
+
+
+def update_first_msg_answs(text):
+    msg = db.session.query(m.Msgs)
+    msg[0].first_msg_answs = text
     session.commit()
 
 

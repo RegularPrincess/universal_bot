@@ -92,6 +92,12 @@ def admin_message_processing(uid, text, link=None):
         msg += "\n\n Отправьте новое приветственное сообщение для замены."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
+    elif text == cnst.BTN_FIRST_MSG_ANSWS_EDIT:
+        IN_ADMIN_PANEL[uid] = cnst.BTN_FIRST_MSG_ANSWS_EDIT
+        msg = db.get_first_msg_answs()
+        msg += "\n\n Отправьте новые варианты ответов для замены через запятую или отправте 0 для удаления."
+        mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
+
     elif text == cnst.BTN_EDIT_LAST_MSG:
         IN_ADMIN_PANEL[uid] = cnst.BTN_EDIT_LAST_MSG
         msg = db.get_last_msg()
@@ -188,6 +194,11 @@ def admin_message_processing(uid, text, link=None):
 
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
+        mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
+        IN_ADMIN_PANEL[uid] = ''
+
+    elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_ANSWS_EDIT:
+        db.update_first_msg_answs(text)
         mt.send_keyboard_vk_message(uid, "Сохранено", cnst.KEYBOARD_ADMIN)
         IN_ADMIN_PANEL[uid] = ''
 
@@ -346,7 +357,14 @@ def start_conwersation(number, welcome_only=False):
     new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
-    mt.send_message(number, msg, cnst.WHATSAPP)
+    answs = db.get_first_msg_answs()
+    if answs != '':
+        answrs = answs.split('; ')
+        READY_TO_ENROLL[number].last_variants = answrs
+        mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
+    else:
+        mt.send_message(number, msg, cnst.WHATSAPP)
+        READY_TO_ENROLL[number].skip_next_answ = True
     time.sleep(1)
     quests = copy.deepcopy(db.get_all_quests())
     if not new:
@@ -355,19 +373,19 @@ def start_conwersation(number, welcome_only=False):
         db.add_any(user)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
         user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
-    if welcome_only:
-        READY_TO_ENROLL[number].skip_next_answ = True
-        return
-    if len(quests) > 0:
-        q = quests.pop(0)
-        msg = q.quest
-        if q.answs is not None and len(q.answs) > 0:
-            answrs = q.answs.split('; ')
-            READY_TO_ENROLL[number].last_variants = answrs
-            mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
-        else:
-            READY_TO_ENROLL[number].last_variants = None
-            mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
+    # if welcome_only:
+    #     READY_TO_ENROLL[number].skip_next_answ = True
+    #     return
+    # if len(quests) > 0:
+    #     q = quests.pop(0)
+    #     msg = q.quest
+    #     if q.answs is not None and len(q.answs) > 0:
+    #         answrs = q.answs.split('; ')
+    #         READY_TO_ENROLL[number].last_variants = answrs
+    #         mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
+    #     else:
+    #         READY_TO_ENROLL[number].last_variants = None
+    #         mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
 def send_msg_by_file(text, link):
