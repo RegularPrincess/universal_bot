@@ -183,8 +183,8 @@ def admin_message_processing(uid, text, link=None):
 
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_SUBS_DEL:
         mt.del_subs_by_file(link)
-        IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, "Удалено", cnst.KEYBOARD_ADMIN)
+        IN_ADMIN_PANEL[uid] = ''
 
     elif IN_ADMIN_PANEL[uid] == cnst.BTN_FIRST_MSG_EDIT:
         db.update_first_msg(text)
@@ -238,7 +238,7 @@ def admin_message_processing(uid, text, link=None):
 
 
 def message_processing(uid, text, source, link=None):
-    if db.is_admin(str(uid)):
+    if db.is_admin(str(uid)) and text != '#':
         admin_message_processing(uid, text, link=link)
         return 'ok'
 
@@ -247,6 +247,7 @@ def message_processing(uid, text, source, link=None):
         utils.del_uid_from_dict(uid, READY_TO_ENROLL)
         mt.send_msg_to_admins('Пользователь с номером {} отписался от рассылок и сообщений'
                               .format(uid))
+        return 'ok'
 
     elif uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
         start_conwersation(uid, welcome_only=True)
@@ -397,7 +398,11 @@ def admins_to_admin_menu():
 
 
 admins_to_admin_menu()
+
+# mt.del_subs_by_file('https://vk.com/doc259056624_481462249?hash=631749f9c5ea0ce5f6&dl=61e14654f660532a49')
 # IN_ADMIN_PANEL['259056624'] = cnst.BTN_BROADCAST_BY_FILE
+mt.send_keyboard_vk_message('259056624', "Удалено", cnst.KEYBOARD_ADMIN)
+
 
 # pg = mt.ThreadSubs('259056624')
 # pg.start()
