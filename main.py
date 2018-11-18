@@ -59,8 +59,8 @@ tgbot = tglib.tgbot
 def handle_text(message):
     uid = message.from_user.id
     text = message.text
-    print("\nTG uid" + str(uid))
-    print("\nTG msg" + text)
+    print("\nTG uid " + str(uid))
+    print("\nTG msg " + text)
     tglib.send_mesage(uid, text)
     s.message_processing(uid, text, source=cnst.TG)
 # tglib.send_mesage(uid, text)
@@ -68,7 +68,6 @@ def handle_text(message):
 # print(R)
 # me = tgbot.get_me()
 # print(me)
-
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
