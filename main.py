@@ -1,18 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from threading import Thread
 
 from viberbot import Api
 from viberbot.api.bot_configuration import BotConfiguration
-from viberbot.api.messages import VideoMessage
-from viberbot.api.messages.text_message import TextMessage
-import logging
-
-from viberbot.api.viber_requests import ViberConversationStartedRequest
-from viberbot.api.viber_requests import ViberFailedRequest
-from viberbot.api.viber_requests import ViberMessageRequest
-from viberbot.api.viber_requests import ViberSubscribedRequest
-from viberbot.api.viber_requests import ViberUnsubscribedRequest
-
 from flask import Flask, Response
 from flask import json
 from flask import request
@@ -23,6 +14,7 @@ import telebot
 # from viberbot.api.event_type import EventType
 from viberbot.api.messages import TextMessage
 from viberbot.api.viber_requests import ViberMessageRequest, ViberConversationStartedRequest
+from utils.chat_libs import tglib
 
 import config
 
@@ -66,15 +58,15 @@ bot_configuration = BotConfiguration(
 viber = Api(bot_configuration)
 
 tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
-tgbot.polling(none_stop=True, interval=1)
 
 
 @tgbot.message_handler(content_types=["text"])
 def handle_text(message):
     uid = message.from_user.id
     text = message.text
-    print("\nTG uid" + uid)
+    print("\nTG uid" + str(uid))
     print("\nTG msg" + text)
+    tglib.send_mesage(uid, text)
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
@@ -178,6 +170,15 @@ def main():
     print("Старт")
     port = int(config.port)
     app.run(host='0.0.0.0', port=port, debug=False)
+
+
+class ThreadSubs(Thread):
+    def __init__(self):
+        """Инициализация потока"""
+        Thread.__init__(self)
+
+    def run(self):
+        tgbot.polling(none_stop=True, interval=0)
 
 
 if __name__ == '__main__':
