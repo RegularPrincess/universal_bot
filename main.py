@@ -69,6 +69,12 @@ def handle_text(message):
     tgbot.send_message(uid, text)
     # tglib.send_mesage(uid, text)
 # tglib.send_mesage(uid, text)
+R = tgbot.send_message('wer', 'text')
+print(R)
+me = tgbot.get_me()
+print(me)
+
+
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
 def viberf():
