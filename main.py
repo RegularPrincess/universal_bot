@@ -52,7 +52,7 @@ bot_configuration = BotConfiguration(
 )
 viber = Api(bot_configuration)
 
-tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
+tgbot = tglib.tgbot
 
 
 @tgbot.message_handler(content_types=["text"])
@@ -61,8 +61,8 @@ def handle_text(message):
     text = message.text
     print("\nTG uid" + str(uid))
     print("\nTG msg" + text)
-    tgbot.send_message(uid, text)
     tglib.send_mesage(uid, text)
+    s.message_processing(uid, text, source=cnst.TG)
 # tglib.send_mesage(uid, text)
 # R = tgbot.send_message('wer', 'text')
 # print(R)
