@@ -198,8 +198,8 @@ class ThreadSubs(Thread):
     def run(self):
         tgbot.polling(none_stop=True, interval=0)
 
-tg_thread = ThreadSubs()
-tg_thread.start()
+# tg_thread = ThreadSubs()
+# tg_thread.start()
 
 if __name__ == '__main__':
     main()
