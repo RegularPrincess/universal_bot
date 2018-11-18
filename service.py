@@ -226,7 +226,7 @@ def message_processing(uid, text, source, link=None):
         admin_message_processing(uid, text, link=link)
         return 'ok'
 
-    if uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
+    if uid not in READY_TO_ENROLL and (source == cnst.WHATSAPP or source == cnst.TG):
         start_conwersation_wapp(uid, welcome_only=True)
 
     if uid not in READY_TO_ENROLL and source == cnst.VIBER:
