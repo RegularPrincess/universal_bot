@@ -43,12 +43,7 @@ import consts as cnst
         viber.send_messages(viber_request.sender.id, [
             message
         ])'''
-#
-#
-# @bot.message_handler(content_types=["text"])
-# def handle_text(message):
-#     uid = message.from_user.id
-#     text = message.text
+
 
 bot_configuration = BotConfiguration(
     name='Халва Бета',
@@ -67,12 +62,12 @@ def handle_text(message):
     print("\nTG uid" + str(uid))
     print("\nTG msg" + text)
     tgbot.send_message(uid, text)
-    # tglib.send_mesage(uid, text)
+    tglib.send_mesage(uid, text)
 # tglib.send_mesage(uid, text)
-R = tgbot.send_message('wer', 'text')
-print(R)
-me = tgbot.get_me()
-print(me)
+# R = tgbot.send_message('wer', 'text')
+# print(R)
+# me = tgbot.get_me()
+# print(me)
 
 
 
@@ -187,6 +182,8 @@ class ThreadSubs(Thread):
     def run(self):
         tgbot.polling(none_stop=True, interval=0)
 
+tg_thread = ThreadSubs()
+tg_thread.start()
 
 if __name__ == '__main__':
     main()

@@ -8,7 +8,7 @@ api_id = 384524
 api_hash = '6fd9e886360d69bc24a8076665cdd496'
 
 client = TelegramClient('MYSESSION228', api_id, api_hash).start()
-# tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
+tgbot = telebot.TeleBot("645100799:AAHr08yGqhY8PxAjeSJSdPiUZ-D2MgcB3i8")
 
 
 def invite_to_chanell(number):
@@ -27,9 +27,9 @@ def invite_to_chanell(number):
     print(result)
 
 
-# def send_mesage(uid, text):
-#     res = tgbot.send_message(uid, text)
-#     print(res)
+def send_mesage(uid, text):
+    res = tgbot.send_message(uid, text)
+    print(res)
 
 
 # invite_to_chanell('+79061138436')
