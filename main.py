@@ -61,7 +61,6 @@ def handle_text(message):
     text = message.text
     print("\nTG uid " + str(uid))
     print("\nTG msg " + text)
-    tglib.send_mesage(uid, text)
     s.message_processing(uid, text, source=cnst.TG)
 # tglib.send_mesage(uid, text)
 # R = tgbot.send_message('wer', 'text')

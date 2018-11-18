@@ -27,7 +27,7 @@ def invite_to_chanell(number):
     print(result)
 
 
-def send_mesage(uid, text):
+def send_message(uid, text):
     res = tgbot.send_message(uid, text)
     print(res)
 

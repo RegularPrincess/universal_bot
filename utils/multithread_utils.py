@@ -9,6 +9,8 @@ import consts as cnst
 import utils.chat_libs.vklib as vk
 import utils.chat_libs.whatsapplib as wapp
 import utils.chat_libs.viberlib as vib
+import utils.chat_libs.tglib as tglib
+
 import utils.service_utils as utils
 import model as m
 
@@ -112,6 +114,12 @@ class SendMsg(Thread):
         elif self.msgr == cnst.VIBER:
             if self.answs is None or self.answs == '':
                 vib.send_message(self.uid, self.msg)
+            else:
+                print('answs: ' + self.answs + '\n')
+                vib.send_message_keyboard(self.uid, self.msg, self.answs)
+        elif self.msgr == cnst.TG:
+            if self.answs is None or self.answs == '':
+                tglib.send_message(self.uid, self.msg)
             else:
                 print('answs: ' + self.answs + '\n')
                 vib.send_message_keyboard(self.uid, self.msg, self.answs)
