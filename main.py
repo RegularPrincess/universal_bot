@@ -80,11 +80,11 @@ def handle_text(message):
     print("\nTG uid " + str(uid))
     print("\nTG msg " + text)
     s.message_processing(uid, text, source=cnst.TG)
-tglib.send_mesage(uid, text)
-R = tgbot.send_message('wer', 'text')
-print(R)
-me = tgbot.get_me()
-print(me)
+# tglib.send_mesage(uid, text)
+# R = tgbot.send_message('wer', 'text')
+# print(R)
+# me = tgbot.get_me()
+# print(me)
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])
