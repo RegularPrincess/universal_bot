@@ -360,34 +360,33 @@ def start_conwersation(number, welcome_only=False):
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
     answs = db.get_first_msg_answs()
+    quests = copy.deepcopy(db.get_all_quests())
     if answs != '':
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
         mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
-        READY_TO_ENROLL[number].skip_next_answ = True
-    time.sleep(1)
-    quests = copy.deepcopy(db.get_all_quests())
+        time.sleep(1)
+        if welcome_only:
+            READY_TO_ENROLL[number].skip_next_answ = True
+            return
+        if len(quests) > 0:
+            q = quests.pop(0)
+            msg = q.quest
+            if q.answs is not None and len(q.answs) > 0:
+                answrs = q.answs.split('; ')
+                READY_TO_ENROLL[number].last_variants = answrs
+                mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
+            else:
+                READY_TO_ENROLL[number].last_variants = None
+                mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
     if not new:
         quests = quests[2:]
     else:
         db.add_any(user)
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
         user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
-    # if welcome_only:
-    #     READY_TO_ENROLL[number].skip_next_answ = True
-    #     return
-    # if len(quests) > 0:
-    #     q = quests.pop(0)
-    #     msg = q.quest
-    #     if q.answs is not None and len(q.answs) > 0:
-    #         answrs = q.answs.split('; ')
-    #         READY_TO_ENROLL[number].last_variants = answrs
-    #         mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
-    #     else:
-    #         READY_TO_ENROLL[number].last_variants = None
-    #         mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
 def send_msg_by_file(text, link):
