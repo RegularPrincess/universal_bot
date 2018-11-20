@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import time
 from flask import Flask
 from flask import json
 from flask import request
@@ -44,10 +44,13 @@ def whatsapp_new_msg():
             from_me = m['fromMe']
             print(text)
             print(uid)
+            print(data)
+            time.sleep(5)
             if not from_me:
-                answer = s.message_processing(uid, text, cnst.WHATSAPP)
-            elif '#' in text:
-                answer = s.message_processing(uid, text[1:], cnst.WHATSAPP)
+                print('\n Not From ME\n')
+                # answer = s.message_processing(uid, text, cnst.WHATSAPP)
+            # elif '#' in text:
+            #     answer = s.message_processing(uid, text[1:], cnst.WHATSAPP)
             return 'ok'
     except BaseException as e:
         print(e)
