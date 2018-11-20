@@ -357,14 +357,13 @@ def not_ready_to_enroll(uid):
 
 def start_conwersation(number, welcome_only=False):
     new = db.is_new_user(number)
-    # new = True
-    # welcome_only = False
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
+    msg += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
     answs = db.get_first_msg_answs()
     quests = copy.deepcopy(db.get_all_quests())
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=False)
     if answs != '':
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
@@ -385,11 +384,16 @@ def start_conwersation(number, welcome_only=False):
             else:
                 READY_TO_ENROLL[number].last_variants = None
                 mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
-    if not new:
+    if not new and \
+        ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
+        #Если есть вопросы о дне рождении, то пропускаем их если пользователь не нов
         READY_TO_ENROLL[number].qsts = quests[2:]
-    else:
+    elif new and \
+        ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
+        READY_TO_ENROLL[number].need_birthday = True
         db.add_any(user)
-
+    elif new:
+        db.add_any(user)
 
 
 def send_msg_by_file(text, link):

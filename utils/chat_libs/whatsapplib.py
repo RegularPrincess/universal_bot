@@ -11,7 +11,7 @@ api_ver = config.api_ver
 
 
 def send_message(user_id, text):
-    text += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
+    # text += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
     payload = {
         "phone": user_id,
         "body": text
@@ -31,7 +31,7 @@ def send_message(user_id, text):
 
 def send_message_keyboard(user_id, text, keyboard):
     text += get_keyboard_from_list(keyboard)
-    text += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
+    # text += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
     payload = {
         "phone": user_id,
         "body": text
