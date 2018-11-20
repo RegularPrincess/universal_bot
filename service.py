@@ -357,10 +357,14 @@ def not_ready_to_enroll(uid):
 
 def start_conwersation(number, welcome_only=False):
     new = db.is_new_user(number)
+    # new = True
+    # welcome_only = False
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
     answs = db.get_first_msg_answs()
     quests = copy.deepcopy(db.get_all_quests())
+    READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
     if answs != '':
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
@@ -382,11 +386,10 @@ def start_conwersation(number, welcome_only=False):
                 READY_TO_ENROLL[number].last_variants = None
                 mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
     if not new:
-        quests = quests[2:]
+        READY_TO_ENROLL[number].qsts = quests[2:]
     else:
         db.add_any(user)
-    READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=new)
+
 
 
 def send_msg_by_file(text, link):

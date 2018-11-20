@@ -67,7 +67,7 @@ def debug():
 
 @app.route(rule='/2', methods=['GET'])
 def debug2():
-    answer = s.message_processing('79991577222', '11', cnst.WHATSAPP)
+    answer = s.message_processing('79991577222', 'hi', cnst.WHATSAPP)
     return answer
 
 
