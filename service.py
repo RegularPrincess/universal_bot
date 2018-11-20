@@ -359,7 +359,7 @@ def start_conwersation(number, welcome_only=False):
     new = db.is_new_user(number)
     user = m.EnrollInfo(number=number, uid=number, msgr=cnst.WHATSAPP)
     msg = db.get_first_msg()
-    msg += "\n\n(Вы можете отправить # для прекращения общения и остановки рассылки)"
+    msg += "\n\n(Если Вы желаете отписаться от рассылки, отправьте символ - #)\n"
     answs = db.get_first_msg_answs()
     quests = copy.deepcopy(db.get_all_quests())
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
