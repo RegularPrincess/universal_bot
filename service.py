@@ -341,6 +341,7 @@ def message_processing(uid, text, source, link=None):
                 obj.msg = db.get_congrat_msg()
                 thread_manager.add_brcst_thread(obj)
             except BaseException as e:
+                print("Error ERROR ROORRR")
                 print(e.with_traceback(e.__traceback__))
                 print(e)
                 print(e.__traceback__)
