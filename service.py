@@ -404,10 +404,6 @@ def start_conwersation(number, welcome_only=False):
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
-        if not new and \
-                ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
-            # Если есть вопросы о дне рождении, то пропускаем их если пользователь не нов
-            READY_TO_ENROLL[number].qsts = quests[2:]
         if welcome_only:
             READY_TO_ENROLL[number].need_birthday = new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower())
@@ -428,7 +424,7 @@ def start_conwersation(number, welcome_only=False):
         db.add_any(user)
     elif new:
         db.add_any(user)
-
+    quests = READY_TO_ENROLL[number].qsts
     if len(quests) > 0 and not welcome_only:
         q = quests.pop(0)
         msg = q.quest
