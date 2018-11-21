@@ -371,19 +371,12 @@ def start_conwersation(number, welcome_only=False):
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
+        welcome_only = False
         if welcome_only:
+            READY_TO_ENROLL[number].need_birthday = new and \
+        ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower())
             READY_TO_ENROLL[number].skip_next_answ = True
             return
-        if len(quests) > 0:
-            q = quests.pop(0)
-            msg = q.quest
-            if q.answs is not None and len(q.answs) > 0:
-                answrs = q.answs.split('; ')
-                READY_TO_ENROLL[number].last_variants = answrs
-                mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
-            else:
-                READY_TO_ENROLL[number].last_variants = None
-                mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
     if not new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
         #Если есть вопросы о дне рождении, то пропускаем их если пользователь не нов
@@ -394,6 +387,17 @@ def start_conwersation(number, welcome_only=False):
         db.add_any(user)
     elif new:
         db.add_any(user)
+
+    if len(quests) > 0:
+        q = quests.pop(0)
+        msg = q.quest
+        if q.answs is not None and len(q.answs) > 0:
+            answrs = q.answs.split('; ')
+            READY_TO_ENROLL[number].last_variants = answrs
+            mt.send_message_keyboard(number, msg, answrs, msgr=READY_TO_ENROLL[number].ei.msgr)
+        else:
+            READY_TO_ENROLL[number].last_variants = None
+            mt.send_message(number, msg, msgr=READY_TO_ENROLL[number].ei.msgr)
 
 
 def send_msg_by_file(text, link):
