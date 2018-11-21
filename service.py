@@ -284,11 +284,11 @@ def message_processing(uid, text, source, link=None):
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
                 return
         quests = READY_TO_ENROLL[uid].qsts
-        if not READY_TO_ENROLL[uid].first_time and 'рожден' in quests[0].quest.lower():
-            try:
+        try:
+            if not READY_TO_ENROLL[uid].first_time and 'рожден' in quests[0].quest.lower():
                 READY_TO_ENROLL[uid].qsts = quests[2:]
-            except:
-                pass
+        except:
+            pass
 
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
