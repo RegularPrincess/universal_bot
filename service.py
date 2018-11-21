@@ -114,6 +114,7 @@ def admin_message_processing(uid, text, link=None):
 
     elif text == cnst.BTN_ADD_BIRTHDAY_QUESTS:
         db.add_birthday_quests()
+        utils.ID_WRAPPER.update()
         msg = "Вопросы о дне рождении добавлены после приветственного и " \
               "могут быть изменены в меню вопросов, на равне с другими вопросами."
         mt.send_message(uid, msg)

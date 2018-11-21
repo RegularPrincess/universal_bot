@@ -178,5 +178,8 @@ def add_birthday_quests():
                            'Или отправьте "Нет", если хотите пропустить вопросы о дне рождении.'))
     add_any(m.QuestMsg('Какого числа у вас день рождение? (Введите число от 1 до 31)'))
     for q in quests:
-        q.id = None
         add_any(m.QuestMsg(quest=q.quest, answs=q.answs))
+    d = get_all_quests()
+    print(d)
+
+add_birthday_quests()
