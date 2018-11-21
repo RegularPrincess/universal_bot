@@ -270,7 +270,7 @@ def message_processing(uid, text, source, link=None):
         return 'ok'
 
     elif uid not in READY_TO_ENROLL and source == cnst.WHATSAPP:
-        start_conwersation(uid, welcome_only=True)
+        start_conwersation(uid, welcome_only=False)
 
     # Обработка ввода данных пользователя
     elif uid in READY_TO_ENROLL:
@@ -409,6 +409,10 @@ def start_conwersation(number, welcome_only=False):
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower())
             READY_TO_ENROLL[number].skip_next_answ = True
             db.add_any(user)
+            if not new and \
+                    ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
+                # Если есть вопросы о дне рождении, то пропускаем их если пользователь не нов
+                READY_TO_ENROLL[number].qsts = quests[2:]
             return
     if not new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
