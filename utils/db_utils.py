@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+import copy
 import sqlalchemy
 from sqlalchemy.exc import SQLAlchemyError
 import model as m
@@ -163,7 +163,19 @@ def_admin = m.Admin('Юрий', '259056624')
 add_any(def_admin)
 f_msg = m.Msgs('Приветственное сообщение', 'Поздравительное сообщнеие!', "Спасибо, что уделили время!")
 add_any(f_msg)
-if is_quest_msg_empty():
+# if is_quest_msg_empty():
+#     add_any(m.QuestMsg('В каком месяце у вас день рождение? (Введите число от 1 до 12). '
+#                        'Или отправьте "Нет", если хотите пропустить вопросы о дне рождении.'))
+#     add_any(m.QuestMsg('Какого числа у вас день рождение? (Введите число от 1 до 31)'))
+
+
+def add_birthday_quests():
+    quests = copy.deepcopy(get_all_quests())
+    db.session.query(m.QuestMsg).delete()
+    db.session.commit()
+
     add_any(m.QuestMsg('В каком месяце у вас день рождение? (Введите число от 1 до 12). '
-                       'Или отправьте "Нет", если хотите пропустить вопросы о дне рождении.'))
+                           'Или отправьте "Нет", если хотите пропустить вопросы о дне рождении.'))
     add_any(m.QuestMsg('Какого числа у вас день рождение? (Введите число от 1 до 31)'))
+    for q in quests:
+        add_any(q)

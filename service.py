@@ -112,6 +112,12 @@ def admin_message_processing(uid, text, link=None):
         msg += "\n\n Отправьте новое поздравительное сообщение для замены."
         mt.send_keyboard_vk_message(uid, msg, keyboard=cnst.KEYBOARD_CANCEL)
 
+    elif text == cnst.BTN_ADD_BIRTHDAY_QUESTS:
+        db.add_birthday_quests()
+        msg = "Вопросы о дне рождении добавлены после приветственного и " \
+              "могут быть изменены в меню вопросов, на равне с другими вопросами."
+        mt.send_message(uid, msg)
+
     elif text == cnst.BTN_CANCEL:
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, cnst.MSG_CANCELED_MESSAGE, cnst.KEYBOARD_ADMIN)
