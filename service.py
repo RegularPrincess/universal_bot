@@ -371,7 +371,6 @@ def start_conwersation(number, welcome_only=False):
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
-        welcome_only = False
         if welcome_only:
             READY_TO_ENROLL[number].need_birthday = new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower())
