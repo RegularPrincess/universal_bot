@@ -279,6 +279,7 @@ def message_processing(uid, text, source, link=None):
             if utils.isint(text) and int(text) <= len(READY_TO_ENROLL[uid].last_variants):
                 index = int(text) - 1
                 text = READY_TO_ENROLL[uid].last_variants[index]
+                READY_TO_ENROLL[uid].last_variants = None
             else:
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
                 return
