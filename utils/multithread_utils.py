@@ -105,7 +105,7 @@ class ThreadDropUserAfterTime(Thread):
                 if self.redy_to_enroll[key].minut_to_drop <= 0:
                     keys_to_remove.append(key)
             for k in keys_to_remove:
-                s.send_message_admins(self.redy_to_enroll[k].ei)
+                s.send_message_admins(self.redy_to_enroll[k].ei, dropped=True)
                 del self.redy_to_enroll[k]
             time.sleep(60)
 

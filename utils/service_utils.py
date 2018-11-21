@@ -38,11 +38,14 @@ def del_uid_from_dict(uid, dict_):
         del dict_[uid]
 
 
-def send_message_admins(info):
+def send_message_admins(info, dropped=False):
     admins = db.get_all_admins()
     uids = [a.uid for a in admins]
     note = 'Примечания : {}'.format("\n".join(info.answers.split('; ')))
-    vk.send_message_much(uids, cnst.NOTIFY_ADMIN.format(info.uid, note))
+    if dropped:
+        vk.send_message_much(uids, cnst.NOTIFY_ADMIN_AFTER_TIME.format(info.uid, note))
+    else:
+        vk.send_message_much(uids, cnst.NOTIFY_ADMIN.format(info.uid, note))
 
 
 def send_text_message_admins(msg):
