@@ -181,5 +181,3 @@ def add_birthday_quests():
         add_any(m.QuestMsg(quest=q.quest, answs=q.answs))
     d = get_all_quests()
     print(d)
-
-add_birthday_quests()
