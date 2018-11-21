@@ -313,9 +313,6 @@ def message_processing(uid, text, source, link=None):
                 or 'рождение' in msg.lower()):
                 READY_TO_ENROLL[uid].need_birthday = True
 
-
-
-
             if q.answs is not None and len(q.answs) > 0:
                 answrs = q.answs.split('; ')
                 READY_TO_ENROLL[uid].last_variants = answrs
@@ -387,6 +384,7 @@ def start_conwersation(number, welcome_only=False):
         READY_TO_ENROLL[number].last_variants = answrs
         mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
         welcome_only = True
+        return
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
