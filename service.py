@@ -388,7 +388,7 @@ def start_conwersation(number, welcome_only=False):
     answs = db.get_first_msg_answs()
     quests = copy.deepcopy(db.get_all_quests())
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=False, first_time=new)
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=False, first_time=False)
     if answs != '':
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
