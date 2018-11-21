@@ -346,9 +346,15 @@ def message_processing(uid, text, source, link=None):
                 msg = db.get_last_msg()
                 mt.send_message(uid, msg, msgr=READY_TO_ENROLL[uid].ei.msgr)
                 mt.send_msg_to_admins(READY_TO_ENROLL[uid].ei)
-                db.update_user(READY_TO_ENROLL[uid].ei, uid)
-                READY_TO_ENROLL[uid].last_variants = None
-                utils.del_uid_from_dict(uid, READY_TO_ENROLL)
+                try:
+                    db.update_user(READY_TO_ENROLL[uid].ei, uid)
+                    READY_TO_ENROLL[uid].last_variants = None
+                except BaseException as e:
+                    print(e.with_traceback(e.__traceback__))
+                    print(e)
+                    print(e.__traceback__)
+                finally:
+                    utils.del_uid_from_dict(uid, READY_TO_ENROLL)
 
     # Вход для админа
     elif text.lower() in cnst.ADMIN_KEY_WORDS and not_ready_to_enroll(uid):
