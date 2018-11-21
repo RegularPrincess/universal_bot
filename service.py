@@ -391,7 +391,6 @@ def start_conwersation(number, welcome_only=False):
         READY_TO_ENROLL[number].last_variants = answrs
         mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
         welcome_only = True
-        return
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
