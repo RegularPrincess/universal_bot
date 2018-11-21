@@ -391,6 +391,7 @@ def start_conwersation(number, welcome_only=False):
         READY_TO_ENROLL[number].last_variants = answrs
         mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
         welcome_only = True
+        db.add_any(user)
         if not new and \
                 ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
             # Если есть вопросы о дне рождении, то пропускаем их если пользователь не нов
@@ -403,6 +404,7 @@ def start_conwersation(number, welcome_only=False):
             READY_TO_ENROLL[number].need_birthday = new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower())
             READY_TO_ENROLL[number].skip_next_answ = True
+            db.add_any(user)
             return
     if not new and \
         ('рождения' in quests[0].quest.lower() or 'рождение' in quests[0].quest.lower()):
