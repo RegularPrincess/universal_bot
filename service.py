@@ -285,7 +285,10 @@ def message_processing(uid, text, source, link=None):
                 return
         quests = READY_TO_ENROLL[uid].qsts
         if not READY_TO_ENROLL[uid].first_time and 'рожден' in quests[0].quest.lower():
-            READY_TO_ENROLL[uid].qsts = quests[2:]
+            try:
+                READY_TO_ENROLL[uid].qsts = quests[2:]
+            except:
+                pass
 
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
