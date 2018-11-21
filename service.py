@@ -368,6 +368,7 @@ def start_conwersation(number, welcome_only=False):
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
         mt.send_message_keyboard(number, msg=msg, keyboard=answrs, msgr=cnst.WHATSAPP)
+        welcome_only = True
     else:
         mt.send_message(number, msg, cnst.WHATSAPP)
         time.sleep(1)
@@ -387,7 +388,7 @@ def start_conwersation(number, welcome_only=False):
     elif new:
         db.add_any(user)
 
-    if len(quests) > 0:
+    if len(quests) > 0 and not welcome_only:
         q = quests.pop(0)
         msg = q.quest
         if q.answs is not None and len(q.answs) > 0:
