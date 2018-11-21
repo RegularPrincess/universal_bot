@@ -84,10 +84,11 @@ class EnrollInfo(db.Model):
 
 
 class EnrollObj:
-    def __init__(self, enroll_info, quests, need_birthday=True):
+    def __init__(self, enroll_info, quests, need_birthday=True, first_time=False):
         self.ei = enroll_info
         self.qsts = quests
         self.last_variants = None
         self.need_birthday = need_birthday
         self.skip_next_answ = False
         self.minut_to_drop = 29
+        self.first_time = first_time

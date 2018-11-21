@@ -275,6 +275,10 @@ def message_processing(uid, text, source, link=None):
             else:
                 mt.send_message(uid, 'Введите цифру варианта!', msgr=READY_TO_ENROLL[uid].ei.msgr)
                 return
+        quests = READY_TO_ENROLL[uid].qsts
+        if not READY_TO_ENROLL[uid].first_time and 'рожден' in quests[0].quest.lower():
+            READY_TO_ENROLL[uid].qsts = quests[2:]
+
         if len(READY_TO_ENROLL[uid].qsts) > 0:
             if READY_TO_ENROLL[uid].need_birthday and not utils.isint(text):
                 # пропускаем вопрос о др
@@ -298,6 +302,13 @@ def message_processing(uid, text, source, link=None):
                     READY_TO_ENROLL[uid].skip_next_answ = False
                 q = READY_TO_ENROLL[uid].qsts.pop(0)
                 msg = q.quest
+            if ('рождения' in msg.lower()
+                or 'рождение' in msg.lower()):
+                READY_TO_ENROLL[uid].need_birthday = True
+
+
+
+
             if q.answs is not None and len(q.answs) > 0:
                 answrs = q.answs.split('; ')
                 READY_TO_ENROLL[uid].last_variants = answrs
@@ -363,7 +374,7 @@ def start_conwersation(number, welcome_only=False):
     answs = db.get_first_msg_answs()
     quests = copy.deepcopy(db.get_all_quests())
     READY_TO_ENROLL[number] = m.EnrollObj(m.EnrollInfo(
-        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=False)
+        user.number, user.uid, user.id, '', user.msgr), quests, need_birthday=False, first_time=new)
     if answs != '':
         answrs = answs.split('; ')
         READY_TO_ENROLL[number].last_variants = answrs
