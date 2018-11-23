@@ -51,10 +51,13 @@ class ThreadBrdcst(Thread):
                 plane += timedelta(days=self.bcst.repet_days)
             if plane >= now:
                 wait_time = (plane - now).total_seconds()
+            print('\nbrdcst '+str(wait_time)+'\n')
             time.sleep(wait_time)
             if self.bcst.target is not None and len(self.bcst.target) > 5:
                 send_message(self.bcst.target, self.bcst.msg, cnst.WHATSAPP)
+                print('\nbrdcst to ' + str(self.bcst.target) + '\n')
             else:
+                print('\nbrdcst to all\n')
                 send_msg_all_whatsapp_subs(self.bcst.msg)
             time.sleep(61)
 
