@@ -11,6 +11,16 @@ import consts as cnst
 import utils.chat_libs.vklib as vk
 import utils.chat_libs.whatsapplib as wapp
 import utils.service_utils as utils
+import utils.db_utils as db
+import model as m
+
+obj = m.BcstByTime()
+obj.start_date = datetime.strptime('24.11.2018', '%d.%m.%Y').date()
+obj.time = datetime.strptime('01:37', '%H:%M').time()
+obj.repet_days = 365
+obj.msg = "qwertyui"
+obj.target = '79991577222'
+# db.add_any(obj)
 
 
 class ThreadManager:
@@ -44,14 +54,16 @@ class ThreadBrdcst(Thread):
         day = self.bcst.start_date
         time_ = self.bcst.time
         plane = datetime.combine(day, time_)
+        print(str(plane))
         wait_time = 0
         while True:
             now = datetime.today()
             while plane < now:
                 plane += timedelta(days=self.bcst.repet_days)
             if plane >= now:
+                d = (plane - now)
                 wait_time = (plane - now).total_seconds()
-            print('\nbrdcst '+str(wait_time)+'\n')
+            print('\nbrdcst ' + str(wait_time) + '\n')
             time.sleep(wait_time)
             if self.bcst.target is not None and len(self.bcst.target) > 5:
                 send_message(self.bcst.target, self.bcst.msg, cnst.WHATSAPP)
@@ -143,6 +155,7 @@ def send_text_msg_to_admins(text):
     s = ThreadBrdcstToAdmins(text)
     s.start()
 
+
 def send_message(uid, msg, msgr=cnst.VK):
     # keyboard - list buttons
     if msgr == cnst.VK:
@@ -178,7 +191,6 @@ def send_msg_all_whatsapp_subs(msg):
 
 
 def send_msg_welcome(uid, out=cnst.WHATSAPP):
-
     if out == cnst.WHATSAPP:
         pass
         # отправить приветствие через ватсапп
