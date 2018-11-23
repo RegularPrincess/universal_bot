@@ -339,6 +339,7 @@ def message_processing(uid, text, source, link=None):
                 obj.time = datetime.strptime('10:00', '%H:%M').time()
                 obj.repet_days = 365
                 obj.msg = db.get_congrat_msg()
+                obj.target = uid
                 thread_manager.add_brcst_thread(obj)
             except BaseException as e:
                 print("Error ERROR ROORRR")

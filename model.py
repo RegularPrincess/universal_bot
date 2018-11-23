@@ -38,6 +38,7 @@ class BcstByTime(db.Model):
     time = db.Column(db.TIME)
     repet_days = db.Column(db.INTEGER)
     msg = db.Column(db.UnicodeText)
+    target = db.Column(db.UnicodeText)
 
     def __repr__(self):
         return '<BcstByTime %r>' % (self.msg)

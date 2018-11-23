@@ -9,6 +9,7 @@ from main import db
 
 
 # m.Msgs.__table__.drop(db.engine)
+m.BcstByTime.__table__.drop(db.engine)
 db.create_all()
 session = db.session
 

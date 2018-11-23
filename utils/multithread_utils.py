@@ -52,7 +52,10 @@ class ThreadBrdcst(Thread):
             if plane >= now:
                 wait_time = (plane - now).total_seconds()
             time.sleep(wait_time)
-            send_msg_all_whatsapp_subs(self.bcst.msg)
+            if self.bcst.target is not None and len(self.bcst.target) > 5:
+                send_message(self.bcst.target, self.bcst.msg, cnst.WHATSAPP)
+            else:
+                send_msg_all_whatsapp_subs(self.bcst.msg)
             time.sleep(61)
 
 
