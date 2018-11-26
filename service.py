@@ -124,7 +124,7 @@ def admin_message_processing(uid, text, link=None):
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, cnst.MSG_CANCELED_MESSAGE, cnst.KEYBOARD_ADMIN)
 
-    elif text in cnst.ADMIN_KEY_WORDS:
+    elif text.lower() in cnst.ADMIN_KEY_WORDS:
         IN_ADMIN_PANEL[uid] = ''
         mt.send_keyboard_vk_message(uid, cnst.MSG_ADMIN_PANEL, cnst.KEYBOARD_ADMIN)
 
