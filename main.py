@@ -55,13 +55,6 @@ viber = Api(bot_configuration)
 
 tgbot = tglib.tgbot
 # tgbot.set_webhook()
-tgbot.remove_webhook()
-
-time.sleep(0.1)
-
-# Set webhook
-res = tgbot.set_webhook(url='https://8922388106.com/test/incomingtg')
-print(res)
 
 
 @app.route(rule='/test/incomingtg'.format(bot_name), methods=['POST'])
@@ -80,11 +73,6 @@ def handle_text(message):
     print("\nTG uid " + str(uid))
     print("\nTG msg " + text)
     s.message_processing(uid, text, source=cnst.TG)
-# tglib.send_mesage(uid, text)
-# R = tgbot.send_message('wer', 'text')
-# print(R)
-# me = tgbot.get_me()
-# print(me)
 
 
 @app.route(rule='/{}/incoming'.format(bot_name), methods=['POST'])

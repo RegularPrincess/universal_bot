@@ -231,14 +231,14 @@ def message_processing(uid, text, source, link=None):
 
     if uid not in READY_TO_ENROLL and (source == cnst.VIBER or source == cnst.TG):
         quests = copy.deepcopy(db.get_all_quests())
-        user = m.EnrollInfo(number=None, uid=uid, msgr=cnst.VIBER)
+        user = m.EnrollInfo(number=None, uid=uid, msgr=source)
         READY_TO_ENROLL[uid] = m.EnrollObj(enroll_info=m.EnrollInfo(
             user.number, user.uid, user.id, [], user.msgr), quests=quests)
         msg = db.get_first_msg()
         print(msg)
-        mt.send_message(uid, msg=msg, msgr=cnst.VIBER)
+        mt.send_message(uid, msg=msg, msgr=source)
         time.sleep(1)
-        mt.send_message(uid, 'Нам необходим ваш номер телефона', msgr=cnst.VIBER)
+        mt.send_message(uid, 'Нам необходим ваш номер телефона', msgr=source)
         return 'ok'
 
     # Обработка ввода данных пользователя
